@@ -45,7 +45,19 @@ private static void ExecuteBatchExample()
 			// Process each address suggestion
 			foreach (var suggestion in suggestionsArray)
 			{
+				Console.WriteLine(suggestion.Addressee);
 				Console.WriteLine(suggestion.Street);
+				Console.WriteLine(suggestion.Street2);
+				Console.WriteLine(suggestion.City);
+				Console.WriteLine(suggestion.LastLine);
+				Console.WriteLine(suggestion.State);
+				Console.WriteLine(suggestion.UnitNumber);
+				Console.WriteLine(suggestion.Urbanization);
+				Console.WriteLine(suggestion.ZipCode);
+				Console.WriteLine(suggestion.CountyFips);
+				Console.WriteLine(suggestion.CountyName);
+				Console.WriteLine(suggestion.DpvConfirmCode);
+				Console.WriteLine(suggestion.Barcode);
 			}
 		}
 	}
