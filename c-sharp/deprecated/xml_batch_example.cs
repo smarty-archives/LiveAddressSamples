@@ -56,8 +56,8 @@ private static void ExecuteBatchExample()
 				Console.WriteLine(suggestion.ZipCode);
 				Console.WriteLine(suggestion.CountyFips);
 				Console.WriteLine(suggestion.CountyName);
-				Console.WriteLine(suggestion.DpvConfirmCode);
-				Console.WriteLine(suggestion.Barcode);
+				Console.WriteLine(suggestion.DpvConfirmCode); // Delivery Point Validation
+				Console.WriteLine(suggestion.Barcode); // Delivery Point Barcode
 			}
 		}
 	}
