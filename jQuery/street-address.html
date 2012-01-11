@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Html LiveAddress API Example - jQuery.ajax Example</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div id="results"></div>
+
+	<script>
+		$(document).ready(function() {
+			$.ajax({
+				url: 'https://api.qualifiedaddress.com/street-address/',
+				dataType: 'JSONP', // NOTE: This is what allows the cross-domain ajax call.
+				data: {
+					'auth-token': 'YOUR_REST_AUTHENTICATION_TOKEN_HERE',
+					'street': '1600 Amphitheatre Parkway',
+					'city': 'Mountain View',
+					'state': 'CA',
+					'zipCode': '94043'
+				},
+				success: function (data, status, xhr) {
+					var pretty = JSON.stringify(data, null, 4).replace( / /g, '&nbsp;').replace( /\n/g, '<br />');
+					$('div#results').html(pretty);
+				}
+			});
+		});
+	</script>
+</body>
+</html>
+
+<!-- Sample output:
+[
+    {
+        "input_index": 0,
+        "candidate_index": 0,
+        "delivery_line_1": "1600 Amphitheatre Pkwy",
+        "last_line": "Mountain View CA 94043-1351",
+        "delivery_point_barcode": "940431351000",
+        "components": {
+            "primary_number": "1600",
+            "street_name": "Amphitheatre",
+            "street_suffix": "Pkwy",
+            "city_name": "Mountain View",
+            "state_abbreviation": "CA",
+            "zipcode": "94043",
+            "plus4_code": "1351",
+            "delivery_point": "00",
+            "delivery_point_check_digit": "0"
+        },
+        "metadata": {
+            "record_type": "S",
+            "county_fips": "06085",
+            "county_name": "Santa Clara",
+            "carrier_route": "C058",
+            "congressional_district": "14"
+        },
+        "analysis": {
+            "dpv_match_code": "Y",
+            "dpv_footnotes": "AABB",
+            "dpv_cmra": "N",
+            "dpv_vacant": "N",
+            "ews_match": false,
+            "footnotes": "N#"
+        }
+    }
+]
+-->
