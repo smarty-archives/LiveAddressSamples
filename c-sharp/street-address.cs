@@ -4,6 +4,7 @@ namespace Rest
 	using System.IO;
 	using System.Net;
 	using System.Web;
+	using Newtonsoft.Json;
 
 	public class Program
 	{
@@ -27,7 +28,15 @@ namespace Rest
 			var request = WebRequest.Create(url);
 			using (var response = request.GetResponse())
 			using (var reader = new StreamReader(response.GetResponseStream() ?? new MemoryStream()))
-				Console.WriteLine(reader.ReadToEnd());
+			{
+				var rawResponse = reader.ReadToEnd();
+				Console.WriteLine(rawResponse);
+
+				// Suppose you wanted to use Json.Net to pretty-print the response (delete the next two lines if not):
+				// Json.Net: http://http://json.codeplex.com/
+				dynamic parsedJson = JsonConvert.DeserializeObject(rawResponse);
+                Console.WriteLine(JsonConvert.SerializeObject(parsedJson, Formatting.Indented));
+			}
 
 			Console.ReadLine();
 		}
