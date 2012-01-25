@@ -35,7 +35,7 @@ namespace Rest
 				// Suppose you wanted to use Json.Net to pretty-print the response (delete the next two lines if not):
 				// Json.Net: http://http://json.codeplex.com/
 				dynamic parsedJson = JsonConvert.DeserializeObject(rawResponse);
-                Console.WriteLine(JsonConvert.SerializeObject(parsedJson, Formatting.Indented));
+				Console.WriteLine(JsonConvert.SerializeObject(parsedJson, Formatting.Indented));
 			}
 
 			Console.ReadLine();
