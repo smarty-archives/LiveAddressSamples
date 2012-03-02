@@ -1,44 +1,91 @@
 namespace Rest
 {
 	using System;
-	using System.IO;
 	using System.Net;
 	using System.Web;
 	using Newtonsoft.Json;
 
 	public class Program
 	{
-		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_AUTHENTICATION_TOKEN_HERE");
+		// NOTE: all query string parameter values must be URL-encoded!
+		private const string ApiUrl = "https://api.qualifiedaddress.com/street-address/";
+		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_AUTHENTICATION_KEY_HERE");
 		private static readonly string Street = HttpUtility.UrlEncode("3214 N University");
 		private static readonly string City = HttpUtility.UrlEncode("provo");
 		private static readonly string State = HttpUtility.UrlEncode("ut");
 		private static readonly string ZipCode = HttpUtility.UrlEncode("84604");
 
-		// Simple HTTP GET request:
 		public static void Main()
 		{
-			// NOTE: all query string parameter values must be URL-encoded (as shown above)!
-			var url = "https://api.qualifiedaddress.com/street-address/" +
-				"?auth-token=" + AuthenticationToken +
-				"&street=" + Street +
-				"&city=" + City +
-				"&state=" + State +
-				"&zipCode=" + ZipCode;
+			var url = ApiUrl +
+			          "?auth-token=" + AuthenticationToken +
+			          "&street=" + Street +
+			          "&city=" + City +
+			          "&state=" + State +
+			          "&zipCode=" + ZipCode;
 
-			var request = WebRequest.Create(url);
-			using (var response = request.GetResponse())
-			using (var reader = new StreamReader(response.GetResponseStream() ?? new MemoryStream()))
+			using (var client = new WebClient())
 			{
-				var rawResponse = reader.ReadToEnd();
+				var rawResponse = client.DownloadString(url);
 				Console.WriteLine(rawResponse);
 
 				// Suppose you wanted to use Json.Net to pretty-print the response (delete the next two lines if not):
 				// Json.Net: http://http://json.codeplex.com/
 				dynamic parsedJson = JsonConvert.DeserializeObject(rawResponse);
 				Console.WriteLine(JsonConvert.SerializeObject(parsedJson, Formatting.Indented));
+
+				// Or suppose you wanted to deserialize the json response to a defined structure:
+				var candidates = JsonConvert.DeserializeObject<CandidateAddress[]>(rawResponse);
+				foreach (var address in candidates)
+					Console.WriteLine(address.DeliveryLine1);
 			}
 
 			Console.ReadLine();
+		}
+
+		// Generated using: http://json2csharp.com/
+		public class CandidateAddress
+		{
+			public int InputIndex { get; set; }
+			public int CandidateIndex { get; set; }
+			public string DeliveryLine1 { get; set; }
+			public string LastLine { get; set; }
+			public string DeliveryPointBarcode { get; set; }
+			public Components Components { get; set; }
+			public Metadata Metadata { get; set; }
+			public Analysis Analysis { get; set; }
+		}
+
+		public class Components
+		{
+			public string PrimaryNumber { get; set; }
+			public string StreetName { get; set; }
+			public string StreetSuffix { get; set; }
+			public string CityName { get; set; }
+			public string StateAbbreviation { get; set; }
+			public string Zipcode { get; set; }
+			public string Plus4Code { get; set; }
+			public string DeliveryPoint { get; set; }
+			public string DeliveryPointCheckDigit { get; set; }
+		}
+
+		public class Metadata
+		{
+			public string RecordType { get; set; }
+			public string CountyFips { get; set; }
+			public string CountyName { get; set; }
+			public string CarrierRoute { get; set; }
+			public string CongressionalDistrict { get; set; }
+		}
+
+		public class Analysis
+		{
+			public string DpvMatchCode { get; set; }
+			public string DpvFootnotes { get; set; }
+			public string DpvCmra { get; set; }
+			public string DpvVacant { get; set; }
+			public bool EwsMatch { get; set; }
+			public string Footnotes { get; set; }
 		}
 	}
 }
