@@ -76,6 +76,9 @@ namespace Rest
 			public string CountyName { get; set; }
 			public string CarrierRoute { get; set; }
 			public string CongressionalDistrict { get; set; }
+			public string Latitude { get; set; }
+			public string Longitude { get; set; }
+			public string Precision { get; set; }
 		}
 
 		public class Analysis

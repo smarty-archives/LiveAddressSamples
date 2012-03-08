@@ -6,12 +6,12 @@ require 'net/http'
 # spaces (street, city) or special characters (auth-token)
 
 URL = 'api.qualifiedaddress.com'
-STREET = CGI::escape('1600 Pennsylvania Ave')
-CITY = CGI::escape('Washington')
-STATE = 'DC'
-ZIP_CODE = '20500'
-NUMBER_OF_CANDIDATES = '3'
-AUTH_TOKEN = CGI::escape('YOUR KEY HERE')
+STREET = CGI::escape('1 infinite loop')
+CITY = CGI::escape('cupertino')
+STATE = 'ca'
+ZIP_CODE = '95014'
+NUMBER_OF_CANDIDATES = '1'
+AUTH_TOKEN = CGI::escape('YOUR_AUTHENTICATION_TOKEN_HERE')
 
 QUERY_STRING = '/street-address/?' +
  	'street=' + STREET +
@@ -28,40 +28,40 @@ puts JSON.pretty_generate(JSON.parse(response.body))
 
 # SAMPLE OUTPUT:
 #
-# [
-#   {
-#     "input_index": 0,
-#     "candidate_index": 0,
-#     "delivery_line_1": "1600 PENNSYLVANIA AVE NW",
-#     "last_line": "WASHINGTON DC 20500-0003",
-#     "delivery_point_barcode": "205000003992",
-#     "components": {
-#       "primary_number": "1600",
-#       "street_name": "PENNSYLVANIA",
-#       "street_postdirection": "NW",
-#       "street_suffix": "AVE",
-#       "city_name": "WASHINGTON",
-#       "state_abbreviation": "DC",
-#       "zipcode": "20500",
-#       "plus4_code": "0003",
-#       "delivery_point": "99",
-#       "delivery_point_check_digit": "2"
-#     },
-#     "metadata": {
-#       "record_type": "H",
-#       "county_fips": "11001",
-#       "county_name": "DISTRICT OF COLUMBIA",
-#       "carrier_route": "C000",
-#       "congressional_district": "AL",
-#       "building_default_indicator": "Y"
-#     },
-#     "analysis": {
-#       "dpv_match_code": "D",
-#       "dpv_footnotes": "AAN1",
-#       "dpv_cmra": "N",
-#       "dpv_vacant": "N",
-#       "ews_match": false,
-#       "footnotes": "H#L#"
-#     }
-#   }
-# ]
+#[
+#  {
+#    "input_index": 0,
+#    "candidate_index": 0,
+#    "delivery_line_1": "1 Infinite Loop",
+#    "last_line": "Cupertino CA 95014-2083",
+#    "delivery_point_barcode": "950142083017",
+#    "components": {
+#      "primary_number": "1",
+#      "street_name": "Infinite",
+#      "street_suffix": "Loop",
+#      "city_name": "Cupertino",
+#      "state_abbreviation": "CA",
+#      "zipcode": "95014",
+#      "plus4_code": "2083",
+#      "delivery_point": "01",
+#      "delivery_point_check_digit": "7"
+#    },
+#    "metadata": {
+#      "record_type": "S",
+#      "county_fips": "06085",
+#      "county_name": "Santa Clara",
+#      "carrier_route": "C067",
+#      "congressional_district": "15",
+#      "latitude": 37.33118,
+#      "longitude": -122.03062,
+#      "precision": "Zip9"
+#    },
+#    "analysis": {
+#      "dpv_match_code": "Y",
+#      "dpv_footnotes": "AABB",
+#      "dpv_cmra": "N",
+#      "dpv_vacant": "N",
+#      "ews_match": false
+#    }
+#  }
+#]

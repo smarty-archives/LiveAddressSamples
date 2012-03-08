@@ -58,6 +58,9 @@ private static void ExecuteBatchExample()
 				Console.WriteLine(suggestion.CountyName);
 				Console.WriteLine(suggestion.DpvConfirmCode); // Delivery Point Validation
 				Console.WriteLine(suggestion.Barcode); // Delivery Point Barcode
+				Console.WriteLine(suggestion.Latitude);
+				Console.WriteLine(suggestion.Longitude);
+				Console.WriteLine(suggestion.Precision);
 			}
 		}
 	}
