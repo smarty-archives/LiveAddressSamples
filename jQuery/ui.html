@@ -41,15 +41,18 @@
 						success: function (data, status, xhr) {
 							// Show the candidate addresses (along with the user input)
 							$('#candidates').empty();
+							$('#invalid').hide();
 							data.push(givenAddress);
 							$("#address-candidate-template").tmpl(data).appendTo("#candidates");
-							$('#candidates').dialog({
+							if (data.length === 1)
+								$('#invalid').show();
+							$('#dialog').dialog({
 								title: 'Which address is best?',
 								autoOpen: false,
 								show: 'clip',
 								hide: 'clip'
 							});
-							$('#candidates').dialog('open');
+							$('#dialog').dialog('open');
 						}
 					});
 					return false;
@@ -57,7 +60,7 @@
 
 				$('.address-result').live('click', function(event) {
 					// Put the selected address data in the result div (you could do whatever you want here)
-					$('#candidates').dialog('close');
+					$('#dialog').dialog('close');
 					var raw = $(this).find('.complete-address').html();
 					var json = JSON.parse(raw);
 					var pretty = JSON.stringify(json, null, 4).replace( / /g, '&nbsp;').replace( /\n/g, '<br />');
@@ -84,6 +87,11 @@
 				color: gray;
 				font-size: smaller;
 				margin-bottom: 12px;
+			}
+			#invalid {
+				color: red;
+				font-size: smaller;
+				margin-bottom: 20px;
 			}
 		</style>
 	</head>
@@ -120,6 +128,9 @@
 		</form>
 	
 		<div id="dialog" style="display:none;">
+			<div id="invalid" style="display:none;">
+				This address is not recognized by the USPS.  Are you sure you want to use it?
+			</div>
 			<div id="candidates"></div>
 		</div>
 		
