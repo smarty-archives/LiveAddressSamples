@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Single-Line Address Testing</title>
+		<meta charset="UTF-8">
+		<script src="content/js/jquery.js"></script>
+		<script>
+			/**
+				Single-Line Address Processing (SLAP) Demo
+				By SmartyStreets
+				
+				LiveAddress API: http://smartystreets.com/liveaddress-api
+				
+				Generates permutations of an address until a valid match
+				is returned. Usually the first match returned is
+				the most correct result. See:
+				http://answers.smartystreets.com/questions/318/can-i-verify-a-freeform-address-with-your-service/319
+			*/
+
+			// Put your Javascript authentication token here
+			var js_api_token = '????';
+
+			// The base URL of the request (JSONP will be appended later)
+			var base = 'https://api.qualifiedaddress.com/street-address/?auth-token='+js_api_token;
+
+			// Sentry indicating a match found or not
+			var done = false;
+
+
+			// Used to prevent form submission; widely x-browser compatible
+			function suppress(event) {
+				if (!event)
+					return false;
+				if (event.preventDefault)
+						event.preventDefault();
+				if (event.stopPropagation)
+					event.stopPropagation();
+				if (event.cancelBubble)
+					event.cancelBubble = true;
+				return false;
+			}
+
+
+			$(document).ready(function() {
+				$('#singleLineDemo').submit(function(event) {
+					var addr = $('#addr').val();
+					var delim = ' ';
+					
+					// Create permutations for each space in the address string
+					for (var pivot = addr.lastIndexOf(delim); pivot > -1; pivot = addr.lastIndexOf(delim, pivot - 1))
+					{
+						// Pass the first and second portions into
+						// the LiveAddress API for processing
+						var set = {
+							street: addr.substr(0, pivot),
+							lastline: addr.substr(pivot + 1)
+						}
+						
+						// A valid permutation will come back with at least
+						// one result in the response, and the first is usually
+						// the most correct.
+						$.ajax({
+							url: base,
+							data: set,
+							async: false,
+							dataType: 'jsonp',
+							success: function (response)
+							{
+								if (response.length > 0)
+								{
+									// Positive match. Handle accordingly...
+									$('#results').html(JSON.stringify(response, null, '    '));
+									$('#address').html(response[0].delivery_line_1 + "<br>" + response[0].last_line);
+									done = true;
+								}
+							}
+						});
+						
+						if (done)
+							break;
+					}
+					
+					done = false;
+					return suppress(event);
+				});
+			});
+		</script>
+		<style>
+			body { width: 960px; margin: 50px auto; }
+			input { font-size: 16px; padding: 5px; }
+			input[type=text] { width: 75%; }
+			form { margin-bottom: 2em; }
+			#address { font: 18px/1.5em sans-serif; }
+			#results {
+				margin-top: 3em;
+				background: #CCC;
+				text-shadow: 0px 1px 0px white;
+				white-space: pre;
+				padding: 10px;
+				font: 12px/1.5em Monaco, 'Lucida Grande', 'Courier New', serif;
+			}
+		</style>
+	</head>
+	<body>
+	
+		<form id="singleLineDemo">
+			<input type="text" id="addr">
+			<input type="submit" value="Perform SLAP">
+		</form>
+		
+		
+		<div id="address"></div>
+		<div id="results"></div>
+	</body>
+</html>
