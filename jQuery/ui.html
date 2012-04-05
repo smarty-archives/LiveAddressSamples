@@ -3,6 +3,20 @@
 	<head>
 		<title>Alternative LiveAddress UI</title>
 
+		<!-- INSTRUCTIONS:
+		
+		Insert your Javascript API Access Identifier below 
+		as the 'auth-token' value!  You can find the Javascript API
+		Access Identifier here:
+		
+		https://smartystreets.com/account/api/javascript
+		
+		You will also need to register the domain name from which the
+		request originates (localhost, www.my-domain-name.com, etc...).
+		This can also be done from the link above.
+		
+		-->
+		
 		<!-- jQuery -->
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
@@ -13,8 +27,24 @@
 		<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 
 		<script>
+			/* 
+			The purpose of this function is to prevent the form from submitting
+			so the raw response can be displayed on the same page.
+			*/
+			function suppress(event) {
+				if (!event)
+					return false;
+				if (event.preventDefault)
+					event.preventDefault();
+				if (event.stopPropagation)
+					event.stopPropagation();
+				if (event.cancelBubble)
+					event.cancelBubble = true;
+				return false;
+			}
+
 			$(document).ready(function() {
-				$('#verify').click(function() {
+				$('form#address').submit(function(event) {
 					var givenAddress = {
 						'user_input': true,
 						'delivery_line_1': $('#street').val(),
@@ -27,10 +57,12 @@
 						}
 					};
 					$.ajax({
+						type: 'post',
 						url: 'https://api.qualifiedaddress.com/street-address/',
-						dataType: 'JSONP',
+						dataType: 'jsonp',
+						async: false,
 						data: {
-							'auth-token': 'YOUR_AUTHENTICATION_TOKEN_HERE',
+							'auth-token': 'YOUR_JAVASCRIPT_API_ACCESS_IDENTIFIER_HERE',
 							'street': givenAddress.delivery_line_1,
 							'street2': givenAddress.delivery_line_2,
 							'city': givenAddress.components.city,
@@ -38,7 +70,7 @@
 							'zipCode': givenAddress.components.zipcode,
 							'candidates': 4
 						},
-						success: function (data, status, xhr) {
+						success: function (data) {
 							// Show the candidate addresses (along with the user input)
 							$('#candidates').empty();
 							$('#invalid').hide();
@@ -55,7 +87,7 @@
 							$('#dialog').dialog('open');
 						}
 					});
-					return false;
+					return suppress(event);
 				});
 
 				$('.address-result').live('click', function(event) {
@@ -97,11 +129,10 @@
 	</head>
 
 	<body>
-
-		<form id='address'>
+		<form id='address' method="post">
 			<div>
 				<label for="street">Street</label>
-				<input type="text" name="street" id="street" value="3214 N University">
+				<input type="text" name="street" id="street" value="1600 amphitheatre parkway">
 			</div>
 
 			<div>
@@ -111,22 +142,22 @@
 
 			<div>
 				<label for="city">City</label>
-				<input type="text" name="city" id="city" value="provo">
+				<input type="text" name="city" id="city" value="mountain view">
 			</div>
 
 			<div>
 				<label for="state">State</label>
-				<input type="text" name="state" id="state" value="ut">
+				<input type="text" name="state" id="state" value="ca">
 			</div>
 
 			<div>
 				<label for="zip">ZIP Code</label>
-				<input type="text" name="zip" id="zip" value="84604">
+				<input type="text" name="zip" id="zip" value="94043">
 			</div>
 
-			<button id="verify">Verify</button>
+			<input type="submit" id="verify" value="Verify">
 		</form>
-	
+
 		<div id="dialog" style="display:none;">
 			<div id="invalid" style="display:none;">
 				This address is not recognized by the USPS.  Are you sure you want to use it?
