@@ -5,7 +5,7 @@ $authToken = urlencode("raw token here");
 
 // Address input
 $input1 = urlencode("3785 s las vegs av.");
-$input2 = urlencode("los vegas,");
+$input2 = urlencode("las vegas,");
 $input3 = urlencode("nevada");
 
 // Build the URL
