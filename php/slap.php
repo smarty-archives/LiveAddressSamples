@@ -1,70 +1,35 @@
 <?php
 
 /**
- * LiveAddress API Example
- * "SLAP" (Single-Line Address Processing)
+ * LiveAddress API; freeform address example
+ * "SLAP" (Single-Line Address Parsing)
  *
- * by SmartyStreets
+ * By SmartyStreets
  * http://smartystreets.com/products/liveaddress-api
  *
  * This example shows how to validate an address that has
- * not been split into separate components (street, city, state, etc).
- * It generates permutations according to this algorithm: 
- * 
- * http://smartystreets.com/answers/questions/318/can-i-verify-a-freeform-address-with-your-service/319
- *
- * All the permutations are submitted as a batch to the
- * LiveAddress service, which does all the heavy lifting.
- * You may get several results back; usually the first one
- * will be the most correct. 
+ * not yet been split into separate components (street, city, etc).
+ * Simply put the whole address into the "street" field
+ * and LiveAddress will do the rest for you.
  *
  */
 
- 
-// Put your REST auth token here (raw format)
-$authToken = urlencode("YOUR-RAW-AUTHENTICATION-TOKEN-HERE");
 
-// The single-line address to process
-$addr = "3214 north university ave. #409 provo, ut 84604";
+// Put your own auth token here (you can use either the REST auth
+// tokens or the HTML identifiers)
+$authToken = urlencode("raw token here");
 
-$delim = ' ';		// Delimiter around which permutations are made
-$batch = array();	// This becomes our JSON object
+// Address input (one line, not split into components)
+$address = urlencode("3785 s las vegs av. los vegas, nevada");
 
-// Create permutations of the address for each space in it
-for ($pivot = strripos($addr, $delim); $pivot !== false;
-		$pivot = strripos($addr, $delim, -strlen($addr) + $pivot - 1))
-{
-	$permutation = array(
-		"street" => substr($addr, 0, $pivot),
-		"lastline" => substr($addr, $pivot + 1)
-	);
-	
-	array_push($batch, $permutation);
-}
-$json = json_encode($batch);
+// Build the URL
+$req = "https://api.qualifiedaddress.com/street-address/?street={$address}&auth-token={$authToken}";
 
+// GET request and turn into associative array
+$result = json_decode(file_get_contents($req));
 
-// Initialize cURL
-$ch = curl_init();
-
-// Configure the cURL command
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HEADER, 0);
-curl_setopt($ch, CURLOPT_VERBOSE, 0);
-// Use the next line if you prefer to use your Javascript API token rather than your REST API token.
-//curl_setopt($ch, CURLOPT_REFERER, "http://YOUR-AUTHORIZED-DOMAIN-HERE");
-curl_setopt($ch, CURLOPT_URL, "https://api.qualifiedaddress.com/street-address/?auth-token={$authToken}");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-
-// Output comes back as a JSON string; convert it to PHP object
-$results = json_decode(curl_exec($ch));
-
-// Show result. The first of the permutations will likely generate
-// the most correct match, so we look at index 0 for our answer.
-echo "<pre>
-{$results[0]->delivery_line_1}
-{$results[0]->last_line}
-</pre>";
+echo "<pre>";
+print_r($result);
+echo "</pre>";
 
 ?>
