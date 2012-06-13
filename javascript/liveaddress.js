@@ -86,7 +86,7 @@ var LiveAddress = (function()
 					street: (elem ? elem.value : addr)
 				}, callback, wrapper);
 			}
-			else if (typeof addr === "Object")
+			else if (typeof addr === "object")
 				reqid = _buildRequest(addr, callback, wrapper);
 
 			_request(reqid);
@@ -120,6 +120,26 @@ var LiveAddress = (function()
 		{
 			this.verify(addr, callback, function(data) {
 				return LiveAddress.coordinates(data[0]);
+			});
+		},
+
+		components: function(addr, callback)
+		{
+			this.verify(addr, callback, function(data) {
+				var comp = [];
+				for (idx in data)
+				{
+					data[idx].components.street_line1 = data[idx].delivery_line_1;
+					comp.push(data[idx].components);
+				}
+				return comp;
+			});
+		},
+
+		county: function(addr, callback)
+		{
+			this.verify(addr, callback, function(data) {
+				return data[0].metadata.county_name;
 			});
 		},
 
