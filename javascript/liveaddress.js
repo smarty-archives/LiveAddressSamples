@@ -1,27 +1,65 @@
 /*
- *
- * A sample Javascript interface for using the LiveAddress API.
- * This example doesn't require jQuery.
- *
- * This sample is not officially supported by us but is a convenient
- * way to begin implementing the API on your site and experimenting.
- *
- * -- Basic Instructions --
- * Always call LiveAddress.init(123456789) first, replacing "123456789"
- * with your own access identifier from your SmartyStreets settings.
- *
- * You can call LiveAddress.verify() and pass in an object:
- * LiveAddress.verify({ street: "123 main", zip: "12345" });
- *
- * Or you can pass in the ID of a textbox/area of a single-line address:
- * LiveAddress.verify('address');
- *
- * Or you can call geocode to get the coordinates as a string:
- * LiveAddress.geocode('address');
- *
- * Note that both of these functions require a callback function as
- * the second argument if you want to do anything with the JSON response.
- */
+
+LiveAddress API Interface for Javascript (unofficial)
+by SmartyStreets
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+A helpful library for using LiveAddress while abstracting
+away the JSONP requests and other lower-level operations.
+We advise against using this code in production without
+thorough testing in your own system. This library does not
+handle the raw JSON output except return it to your calling
+functions. No jQuery dependencies required.
+
+Always call "LiveAddress.init(12345678)" first, replacing
+"12345678" with your HTML identifier. Then for each call
+to LiveAddress, supply a callback function to handle
+the output.
+
+
+EXAMPLES
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(When you pass in an address, you can pass in an object
+which maps fields to their values, a string being a freeform
+address, a string being the ID of an HTML input/textarea
+element which contains a value, or an array of any of the
+above to do asyncrhonous batch requests.)
+
+LiveAddress.verify({
+	street: "123 main",
+	street2: "apt 105",
+	city: "denver",
+	state: "colorado",
+	zipcode: "12345"
+}, function(json) { ... });
+
+
+LiveAddress.verify("123 main st, 12345", function(json) {
+	// 'json' contains the complete raw JSON response
+	...
+});
+
+
+LiveAddress.geocode("address-textbox", function(coord) {
+	// 'coord' is a string like: "35.05613, -115.10234"
+	...
+});
+
+
+LiveAddress.county("500 fir, denver co", function(cty) {
+	// 'cty' contains the county name
+	...
+});
+
+
+LiveAddress.components("123 main 12345", function(comp) {
+	// 'comp' is the components of a freeform address
+	...
+});
+
+
+*/
+
 
 var LiveAddress = (function()
 {
@@ -29,41 +67,54 @@ var LiveAddress = (function()
 	var _requests = [];
 	var _requestID = 0;
 
-	function _buildRequest(addr, callback, wrapper)
+	function _buildFreeformRequest(addr, callback, wrapper)
 	{
-		var request = {};
+		// Here we expect addr to be a string (ID or actual address)
+		var elem = document.getElementById(addr);
+		return _buildComponentizedRequest({
+			street: (elem ? elem.value : addr)
+		}, callback, wrapper);
+	}
 
+	function _buildComponentizedRequest(addr, callback, wrapper)
+	{
+		// We expect addr to be an object, mapping fields to values
 		if (!addr)
 			return null;
 
+		var request = {};
+		request.addresses = addr instanceof Array ? addr : [addr];
 		request.id = "req_" + (_requestID++) + "_" + new Date().getTime();
-		request.street = addr.street || "";
-		request.street2 = addr.street2 || "";
-		request.city = addr.city || "";
-		request.state = addr.state || "";
-		request.zip = addr.zip || "";
 		request.callback = function(response) { LiveAddress.callback(request.id, response); };
 		request.wrap = wrapper || function(data) { return data; };
 		request.userCallback = callback;
-		request.queryString = "?auth-token=" + encodeURIComponent(_id)
-			+ "&street=" + encodeURIComponent(request.street)
-			+ "&street2=" + encodeURIComponent(request.street2)
-			+ "&city=" + encodeURIComponent(request.city)
-			+ "&state=" + encodeURIComponent(request.state)
-			+ "&zip=" + encodeURIComponent(request.zip)
-			+ "&callback=LiveAddress.requests()." + request.id + ".callback";
+		request.returnCount = 0;
+		request.json = [];
+		request.DOM = [];
 
 		_requests[request.id] = request;
-
 		return request.id;
+	}
+
+	function _queryString(address, id)
+	{
+		var qs = "?auth-token=" + encodeURIComponent(_id);
+		for (prop in address)
+			qs += "&" + prop + "=" + encodeURIComponent(address[prop]);
+		qs += "&callback=LiveAddress.requests()." + id + ".callback";
+		return qs;
 	}
 
 	function _request(reqid)
 	{
-		_requests[reqid].DOM = document.createElement("script");
-	    _requests[reqid].DOM.src = "https://api.qualifiedaddress.com/street-address/"
-	    	+ _requests[reqid].queryString;
-	    document.body.appendChild(_requests[reqid].DOM);
+		for (idx in _requests[reqid].addresses)
+		{
+			var dom = document.createElement("script");
+			dom.src = "https://api.qualifiedaddress.com/street-address/"
+				+ _queryString(_requests[reqid].addresses[idx], reqid);
+			document.body.appendChild(dom);
+			_requests[reqid].DOM[idx] = dom;
+		}
 	}
 
 
@@ -80,14 +131,27 @@ var LiveAddress = (function()
 			var reqid;
 
 			if (typeof addr === "string")
+				reqid = _buildFreeformRequest(addr, callback, wrapper);
+
+			else if (typeof addr === "object" && !(addr instanceof Array))
+				reqid = _buildComponentizedRequest(addr, callback, wrapper);
+
+			else if (addr instanceof Array)
 			{
-				var elem = document.getElementById(addr);
-				reqid = _buildRequest({
-					street: (elem ? elem.value : addr)
-				}, callback, wrapper);
+				// Batch request
+				var addresses = [];
+				for (idx in addr)
+				{
+					if (typeof addr[idx] == "string")
+					{
+						var elem = document.getElementById(addr);
+						addresses.push({ street: (elem ? elem.value : addr[idx]) });
+					}
+					else
+						addresses.push(addr[idx]);
+				}
+				reqid = _buildComponentizedRequest(addresses, callback, wrapper);
 			}
-			else if (typeof addr === "object")
-				reqid = _buildRequest(addr, callback, wrapper);
 
 			_request(reqid);
 		},
@@ -145,10 +209,18 @@ var LiveAddress = (function()
 
 		callback: function(reqid, data)
 		{
-			var result = _requests[reqid].userCallback(_requests[reqid].wrap(data));
-			document.body.removeChild(_requests[reqid].DOM);
-			delete _requests[reqid];
-			return result;
+			var request = _requests[reqid];
+
+			request.json = request.json.concat(data);
+
+			if (++request.returnCount == request.addresses.length)
+			{
+				var result = request.userCallback(request.wrap(request.json));
+				for (idx in request.DOM)
+					document.body.removeChild(request.DOM[idx]);
+				delete request;
+				return result;
+			}
 		}
 	};
 
