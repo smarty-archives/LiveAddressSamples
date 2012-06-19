@@ -65,7 +65,8 @@ var LiveAddress = (function()
 {
 	var _id;
 	var _requests = [];
-	var _requestID = 0;
+	var _batches = {};
+	var _counter = 0;
 
 	function _buildFreeformRequest(addr, callback, wrapper)
 	{
@@ -78,44 +79,66 @@ var LiveAddress = (function()
 
 	function _buildComponentizedRequest(addr, callback, wrapper)
 	{
-		// We expect addr to be an object, mapping fields to values
+		// We expect addr to be at least one object, mapping fields to values
 		if (!addr)
 			return null;
 
-		var request = {};
-		request.addresses = addr instanceof Array ? addr : [addr];
-		request.id = "req_" + (_requestID++) + "_" + new Date().getTime();
-		request.callback = function(response) { LiveAddress.callback(request.id, response); };
-		request.wrap = wrapper || function(data) { return data; };
-		request.userCallback = callback;
-		request.returnCount = 0;
-		request.json = [];
-		request.DOM = [];
+		var reqids = [], batch = {};
+		var batch_id = "batch_" + (_counter++);
 
-		_requests[request.id] = request;
-		return request.id;
+		addr = addr instanceof Array ? addr : [addr];
+
+		_batches[batch_id] = {
+			size: addr.length,
+			returned: 0,
+			json: [],
+			userCallback: callback,
+			wrap: wrapper || function(data) { return data; },
+		};
+
+		for (var idx in addr)
+			reqids.push(_buildRequest(addr[idx], batch_id, idx));
+
+		return reqids;
 	}
 
-	function _queryString(address, id)
+	function _buildRequest(addr, batch_id, index)
 	{
+		var address = { fields: addr };
+
+		address.id = "addr_" + (_counter++);
+		address.inputIndex = parseInt(index);
+		address.json = [];
+		address.batch = batch_id;
+		address.callback = function(response) { LiveAddress.callback(address.id, response); }
+		_requests[address.id] = address;
+
+		return address.id;
+	}
+
+	function _queryString(reqid)
+	{
+		var request = _requests[reqid];
 		var qs = "?auth-token=" + encodeURIComponent(_id);
-		for (prop in address)
-			qs += "&" + prop + "=" + encodeURIComponent(address[prop]);
-		qs += "&callback=LiveAddress.requests()." + id + ".callback";
+		for (prop in request.fields)
+			qs += "&" + prop + "=" + encodeURIComponent(request.fields[prop]);
+		qs += "&callback=" + encodeURIComponent("LiveAddress.request(\"" + reqid + "\").callback");
 		return qs;
 	}
 
-	function _request(reqid)
+	function _request(reqids)
 	{
-		for (idx in _requests[reqid].addresses)
+		for (i in reqids)
 		{
 			var dom = document.createElement("script");
 			dom.src = "https://api.qualifiedaddress.com/street-address/"
-				+ _queryString(_requests[reqid].addresses[idx], reqid);
+				+ _queryString(reqids[i]);
 			document.body.appendChild(dom);
-			_requests[reqid].DOM[idx] = dom;
+			_requests[reqids[i]].DOM = dom;
 		}
 	}
+
+
 
 
 
@@ -128,13 +151,13 @@ var LiveAddress = (function()
 
 		verify: function(addr, callback, wrapper)
 		{
-			var reqid;
+			var reqids;
 
 			if (typeof addr === "string")
-				reqid = _buildFreeformRequest(addr, callback, wrapper);
+				reqids = _buildFreeformRequest(addr, callback, wrapper);
 
 			else if (typeof addr === "object" && !(addr instanceof Array))
-				reqid = _buildComponentizedRequest(addr, callback, wrapper);
+				reqids = _buildComponentizedRequest(addr, callback, wrapper);
 
 			else if (addr instanceof Array)
 			{
@@ -150,10 +173,10 @@ var LiveAddress = (function()
 					else
 						addresses.push(addr[idx]);
 				}
-				reqid = _buildComponentizedRequest(addresses, callback, wrapper);
+				reqids = _buildComponentizedRequest(addresses, callback, wrapper);
 			}
 
-			_request(reqid);
+			_request(reqids);
 		},
 
 		coords: function(address)
@@ -175,15 +198,25 @@ var LiveAddress = (function()
 			return address.metadata.latitude + ", " + address.metadata.longitude;
 		},
 
-		requests: function()
+		request: function(reqid)
 		{
-			return _requests;
+			return _requests[reqid];
 		},
 
 		geocode: function(addr, callback)
 		{
 			this.verify(addr, callback, function(data) {
-				return LiveAddress.coordinates(data[0]);
+
+				if (data.length == 1)
+					return LiveAddress.coordinates(data[0]);
+				else
+				{
+					var coords = [];
+					for (var i in data)
+						coords.push(LiveAddress.coordinates(data[i]));
+					return coords;
+				}
+
 			});
 		},
 
@@ -210,15 +243,19 @@ var LiveAddress = (function()
 		callback: function(reqid, data)
 		{
 			var request = _requests[reqid];
+			var batch = _batches[request.batch];
 
-			request.json = request.json.concat(data);
+			for (var i in data)
+				data[i].input_index = request.inputIndex;
+			batch.json = batch.json.concat(data);
 
-			if (++request.returnCount == request.addresses.length)
+			document.body.removeChild(request.DOM);
+			delete _requests[reqid];
+
+			if (++batch.returned == batch.size)
 			{
-				var result = request.userCallback(request.wrap(request.json));
-				for (idx in request.DOM)
-					document.body.removeChild(request.DOM[idx]);
-				delete request;
+				var result = batch.userCallback(batch.wrap(batch.json));
+				delete _batches[request.batch];
 				return result;
 			}
 		}
