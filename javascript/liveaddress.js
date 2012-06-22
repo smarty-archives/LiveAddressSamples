@@ -227,6 +227,9 @@ var LiveAddress = (function()
 				for (idx in data)
 				{
 					data[idx].components.street_line1 = data[idx].delivery_line_1;
+					if (typeof data[idx].delivery_line_2 !== "undefined")
+						data[idx].components.street_line1 += " " + data[idx].delivery_line_2;
+					data[idx].components.last_line = data[idx].last_line;
 					comp.push(data[idx].components);
 				}
 				return comp;
