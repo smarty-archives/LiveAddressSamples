@@ -1,7 +1,16 @@
 namespace Rest
 {
+	// First, ensure that you are using the .NET Framework 4 (NOT .NET Framework 4 "Client Profile").
+	// Second, add references to:
+	// - Microsoft.CSharp
+	// - System
+	// - System.Web
+	// - System.Runtime.Serialization
+	// - Newtonsoft.Json
+
 	using System;
 	using System.Net;
+	using System.Runtime.Serialization;
 	using System.Web;
 	using Newtonsoft.Json;
 
