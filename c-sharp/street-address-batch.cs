@@ -1,5 +1,12 @@
 namespace RestBatch
 {
+	// First, ensure that you are using the .NET Framework 4 (NOT .NET Framework 4 "Client Profile").
+	// Second, add references to:
+	// - Microsoft.CSharp
+	// - System
+	// - System.Web
+	// - Newtonsoft.Json
+
 	using System;
 	using System.IO;
 	using System.Net;
