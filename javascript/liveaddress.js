@@ -67,6 +67,7 @@ var LiveAddress = (function()
 	var _requests = [];
 	var _batches = {};
 	var _counter = 0;
+	var _candidates = 5; // You can customize this: max. results per address
 
 	function _buildFreeformRequest(addr, callback, wrapper)
 	{
@@ -119,7 +120,7 @@ var LiveAddress = (function()
 	function _queryString(reqid)
 	{
 		var request = _requests[reqid];
-		var qs = "?auth-token=" + encodeURIComponent(_id);
+		var qs = "?auth-token=" + _id + "&candidates=" + _candidates;
 		for (prop in request.fields)
 			qs += "&" + prop + "=" + encodeURIComponent(request.fields[prop]);
 		qs += "&callback=" + encodeURIComponent("LiveAddress.request(\"" + reqid + "\").callback");
@@ -195,7 +196,12 @@ var LiveAddress = (function()
 			if (!address)
 				return undefined;
 
-			return address.metadata.latitude + ", " + address.metadata.longitude;
+			return {
+				lat: address.metadata.latitude,
+				lon: address.metadata.longitude,
+				precision: address.metadata.precision,
+				coords: address.metadata.latitude + ", " + address.metadata.longitude
+			};
 		},
 
 		request: function(reqid)
