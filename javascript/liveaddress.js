@@ -40,8 +40,8 @@ LiveAddress.verify("123 main st, 12345", function(json) {
 });
 
 
-LiveAddress.geocode("address-textbox", function(coord) {
-	// 'coord' is a string like: "35.05613, -115.10234"
+LiveAddress.geocode("address-textbox", function(geo) {
+	// 'geo' is an object: lat, lon, coords, precision
 	...
 });
 
