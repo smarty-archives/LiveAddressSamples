@@ -95,7 +95,7 @@ namespace Rest
 			[DataMember(Name = "city_name")]
 			public string CityName { get; set; }
 
-			[DataMember(Name = "street_abbreviation")]
+			[DataMember(Name = "state_abbreviation")]
 			public string StateAbbreviation { get; set; }
 
 			[DataMember(Name = "zipcode")]
