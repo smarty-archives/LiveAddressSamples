@@ -13,7 +13,6 @@ _ReSharper.*
 
 # Visual Studio, SourceSafe, TFS, and VS extensions
 *.suo
-*.dll
 *.[Cc]ache
 *.cache
 *.csproj.FileListAbsolute.txt
