@@ -1,2 +1,45 @@
 .idea
 *.pyc
+*.bak
+
+# Personal files
+*.csproj.user
+*.resharper.user
+*.user
+
+# ReSharper
+_ReSharper.*
+*.resharper
+
+# Visual Studio, SourceSafe, TFS, and VS extensions
+*.suo
+*.[Cc]ache
+*.cache
+*.csproj.FileListAbsolute.txt
+*.datasource
+*.vs*
+*.scc
+*.vs10x
+*.vssscc
+*.vspcc
+*.vscc
+*.vspscc
+publish/
+~$*
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.obj
+obj
+Obj
+bin
+Bin
+ClientBin/
+.builds
+build.force
+Thumbs.db
+*.exe
+*.pdb
