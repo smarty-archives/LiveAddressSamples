@@ -236,6 +236,8 @@ var LiveAddress = (function()
 					if (typeof data[idx].delivery_line_2 !== "undefined")
 						data[idx].components.first_line += " " + data[idx].delivery_line_2;
 					data[idx].components.last_line = data[idx].last_line;
+					if (typeof data[idx].addressee !== "undefined")
+						data[idx].components.addressee = data[idx].addressee;
 					comp.push(data[idx].components);
 				}
 				return comp;
