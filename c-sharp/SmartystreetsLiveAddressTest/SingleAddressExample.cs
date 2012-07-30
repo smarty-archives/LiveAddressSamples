@@ -15,34 +15,28 @@ namespace SmartystreetsLiveAddressTest
 		private static readonly string City = HttpUtility.UrlEncode("provo");
 		private static readonly string State = HttpUtility.UrlEncode("ut");
 		private static readonly string ZipCode = HttpUtility.UrlEncode("84604");
-		private readonly string apiUrl;
-		private readonly string authenticationToken;
+		private readonly string url;
 
 		public SingleAddressExample(string apiUrl, string authenticationToken)
 		{
-			this.apiUrl = apiUrl;
-			this.authenticationToken = authenticationToken;
+			this.url = apiUrl +
+				"?auth-token=" + authenticationToken +
+				"&street=" + Street +
+				"&city=" + City +
+				"&state=" + State +
+				"&zipCode=" + ZipCode;
 		}
 
 		public string Execute()
 		{
-			var url = this.apiUrl + 
-				"?auth-token=" + this.authenticationToken + 
-				"&street=" + Street + 
-				"&city=" + City + 
-				"&state=" + State +
-				"&zipCode=" + ZipCode;
+			if (this.url.Length >= 260)
+			{
+				Console.WriteLine(UrlTooLongErrorMessage, this.url.Length);
+				return string.Empty;
+			}
 
 			using (var client = new WebClient())
-			{
-				if (url.Length >= 260)
-				{
-					Console.WriteLine(UrlTooLongErrorMessage, url.Length);
-					return string.Empty;
-				}
-
-				return client.DownloadString(url);
-			}
+				return client.DownloadString(this.url);
 		}
 	}
 }
