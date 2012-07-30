@@ -24,6 +24,8 @@
 				ParseResults(ExecuteExample(args[1]));
 			else
 				DisplayProperUsage();
+			
+			EndProgram();
 		}
 
 		private static bool CommandLineUsageWasCorrect(IList<string> args)
@@ -50,15 +52,18 @@
 			var candidates = JsonConvert.DeserializeObject<CandidateAddress[]>(rawResponse);
 			foreach (var address in candidates)
 				Console.WriteLine(address.DeliveryLine1);
-
-			Console.WriteLine("<ENTER> to continue...");
-			Console.ReadLine();
 		}
 
 		private static void DisplayProperUsage()
 		{
 			Console.WriteLine("\nInvalid Arguments\n" +
 				"Usage: \n\nSmartyStreetsLiveAddressTests.exe [single/batch]");
+		}
+
+		private static void EndProgram()
+		{
+			Console.WriteLine("\n\n<ENTER> to continue...");
+			Console.ReadLine();
 		}
 	}
 }
