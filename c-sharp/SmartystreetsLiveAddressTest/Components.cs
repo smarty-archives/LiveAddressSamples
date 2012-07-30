@@ -1,12 +1,9 @@
 namespace SmartystreetsLiveAddressTest
 {
-	#region
 	using System.Runtime.Serialization;
 
-	#endregion
-
-	#region Nested type: Components
-	[DataContract] public class Components
+	[DataContract] 
+	public class Components
 	{
 		[DataMember(Name = "primary_number")]
 		public string PrimaryNumber { get; set; }
@@ -35,5 +32,4 @@ namespace SmartystreetsLiveAddressTest
 		[DataMember(Name = "delivery_point_check_digit")]
 		public string DeliveryPointCheckDigit { get; set; }
 	}
-	#endregion
 }

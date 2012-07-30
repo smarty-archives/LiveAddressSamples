@@ -1,12 +1,9 @@
 namespace SmartystreetsLiveAddressTest
 {
-	#region
 	using System.Runtime.Serialization;
 
-	#endregion
-
-	#region Nested type: Metadata
-	[DataContract] public class Metadata
+	[DataContract] 
+	public class Metadata
 	{
 		[DataMember(Name = "record_type")]
 		public string RecordType { get; set; }
@@ -32,5 +29,4 @@ namespace SmartystreetsLiveAddressTest
 		[DataMember(Name = "precision")]
 		public string Precision { get; set; }
 	}
-	#endregion
 }

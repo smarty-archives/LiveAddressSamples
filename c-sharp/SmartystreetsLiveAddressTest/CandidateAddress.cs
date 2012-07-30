@@ -1,12 +1,9 @@
 namespace SmartystreetsLiveAddressTest
 {
-	#region
 	using System.Runtime.Serialization;
 
-	#endregion
-
-	#region Nested type: CandidateAddress
-	[DataContract] public class CandidateAddress
+	[DataContract]
+	public class CandidateAddress
 	{
 		[DataMember(Name = "input_index")]
 		public int InputIndex { get; set; }
@@ -32,5 +29,4 @@ namespace SmartystreetsLiveAddressTest
 		[DataMember(Name = "analysis")]
 		public Analysis Analysis { get; set; }
 	}
-	#endregion
 }
