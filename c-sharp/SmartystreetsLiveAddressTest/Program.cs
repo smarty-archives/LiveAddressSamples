@@ -23,7 +23,10 @@
 			if (CommandLineUsageWasCorrect(args))
 				ParseResults(ExecuteExample(args[1]));
 			else
+			{
 				DisplayProperUsage();
+				ParseResults(ExecuteExample("single"));
+			}
 			
 			EndProgram();
 		}

@@ -39,8 +39,26 @@ namespace SmartystreetsLiveAddressTest
 		[DataMember(Name = "street_name")]
 		public string StreetName { get; set; }
 
+		[DataMember(Name = "street_predirection")]
+		public string StreetPredirection { get; set; }
+
+		[DataMember(Name = "street_postdirection")]
+		public string StreetPostdirection { get; set; }
+
 		[DataMember(Name = "street_suffix")]
 		public string StreetSuffix { get; set; }
+
+		[DataMember(Name = "secondary_number")]
+		public string SecondaryNumber { get; set; }
+
+		[DataMember(Name = "secondary_designator")]
+		public string SecondaryDesignator { get; set; }
+
+		[DataMember(Name = "pmb_number")]
+		public string PmbNumber { get; set; }
+
+		[DataMember(Name = "pmb_designator")]
+		public string PmbDesignator { get; set; }
 
 		[DataMember(Name = "city_name")]
 		public string CityName { get; set; }
@@ -59,6 +77,9 @@ namespace SmartystreetsLiveAddressTest
 
 		[DataMember(Name = "delivery_point_check_digit")]
 		public string DeliveryPointCheckDigit { get; set; }
+
+		[DataMember(Name = "urbanization")]
+		public string Urbanization { get; set; }
 	}
 
 	[DataContract]
@@ -79,6 +100,12 @@ namespace SmartystreetsLiveAddressTest
 		[DataMember(Name = "congressional_district")]
 		public string CongressionalDistrict { get; set; }
 
+		[DataMember(Name = "building_default_indicator")]
+		public string BuildingDefaultIndicator { get; set; }
+
+		[DataMember(Name = "rdi")]
+		public string RedidentialDeliveryIndicator { get; set; }
+
 		[DataMember(Name = "latitude")]
 		public string Latitude { get; set; }
 
@@ -98,11 +125,14 @@ namespace SmartystreetsLiveAddressTest
 		[DataMember(Name = "dpv_footnotes")]
 		public string DpvFootnotes { get; set; }
 
-		[DataMember(Name = "dpv_cmra_code")]
+		[DataMember(Name = "dpv_cmra")]
 		public string DpvCmraCode { get; set; }
 
-		[DataMember(Name = "dpv_vacant_code")]
+		[DataMember(Name = "dpv_vacant")]
 		public string DpvVacantCode { get; set; }
+
+		[DataMember(Name = "active")]
+		public string Active { get; set; }
 
 		[DataMember(Name = "ews_match")]
 		public bool EwsMatch { get; set; }
