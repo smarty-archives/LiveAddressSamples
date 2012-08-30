@@ -1,15 +1,10 @@
 namespace SmartystreetsLiveAddressTest
 {
-	using System;
 	using System.Net;
 	using System.Web;
 
 	public class SingleAddressExample
 	{
-		private const string UrlTooLongErrorMessage = 
-			"Sorry, the url must be shorter than 260 characters (yours was {0} characters long)." +
-			"As a work-around, See the BatchAddressExample for an alternate method using a WebRequest.";
-		
 		// NOTE: all query string parameter values must be URL-encoded!
 		private static readonly string Street = HttpUtility.UrlEncode("3214 N University");
 		private static readonly string City = HttpUtility.UrlEncode("provo");
@@ -29,12 +24,6 @@ namespace SmartystreetsLiveAddressTest
 
 		public string Execute()
 		{
-			if (this.url.Length >= 260)
-			{
-				Console.WriteLine(UrlTooLongErrorMessage, this.url.Length);
-				return string.Empty;
-			}
-
 			using (var client = new WebClient())
 				return client.DownloadString(this.url);
 		}
