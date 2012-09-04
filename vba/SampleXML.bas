@@ -19,7 +19,7 @@ Sub SampleXMLRequest()
                 "   <state>ca</state>" & _
                 "   <zipcode></zipcode>" & _
                 "   <candidates>5</candidates>" & _
-                "</address>" & 
+                "</address>" & _
                 "</request>"
     
     With xmlHttp
