@@ -29,4 +29,4 @@ Sub SampleXMLRequest()
         .send strReq                                    ' Send request body
         Debug.Print .responseText                       ' Print results to immediate window
     End With
-End Sub_
+End Sub
