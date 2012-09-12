@@ -11,7 +11,7 @@ thorough testing in your own system. This library does not
 handle the raw JSON output except return it to your calling
 functions. No jQuery dependencies required.
 
-Always call "LiveAddress.init(12345678)" first, replacing
+Always call "LiveAddress.init('12345678')" first, replacing
 "12345678" with your HTML identifier. Then for each call
 to LiveAddress, supply a callback function to handle
 the output.
