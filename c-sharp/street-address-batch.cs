@@ -15,9 +15,11 @@ namespace RestBatch
 
 	public class Program
 	{
-		// NOTE: all query string parameter values must be URL-encoded!
+		// NOTE: All query string parameter values must be URL-encoded!
+		// TIP: Get an auth ID/token pair from your SmartyStreets account and put them below.
 		private const string ApiUrl = "https://api.qualifiedaddress.com/street-address/";
-		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_AUTHENTICATION_KEY_HERE");
+		private static readonly string AuthenticationID = HttpUtility.UrlEncode("YOUR_AUTH_ID_HERE");
+		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_RAW_AUTH_TOKEN_HERE");
 		private const string RequestPayload = @"[
     {
         street: '1 infinite loop',
@@ -37,7 +39,7 @@ namespace RestBatch
 
 		public static void Main()
 		{
-			var url = new Uri(ApiUrl + "?auth-token=" + AuthenticationToken);
+			var url = new Uri(ApiUrl + "?auth-id=" + AuthenticationID + "&auth-token=" + AuthenticationToken);
 			var request = (HttpWebRequest)WebRequest.Create(url);
 			request.Method = "POST";
 

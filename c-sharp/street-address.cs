@@ -16,9 +16,11 @@ namespace Rest
 
 	public class Program
 	{
-		// NOTE: all query string parameter values must be URL-encoded!
+		// NOTE: All query string parameter values must be URL-encoded!
+		// TIP: Get an auth ID/token pair from your SmartyStreets account and put them below.
 		private const string ApiUrl = "https://api.qualifiedaddress.com/street-address/";
-		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_AUTHENTICATION_KEY_HERE");
+		private static readonly string AuthenticationID = HttpUtility.UrlEncode("YOUR_AUTH_ID_HERE");
+		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_AUTH_TOKEN_HERE");
 		private static readonly string Street = HttpUtility.UrlEncode("3214 N University");
 		private static readonly string City = HttpUtility.UrlEncode("provo");
 		private static readonly string State = HttpUtility.UrlEncode("ut");
@@ -27,7 +29,8 @@ namespace Rest
 		public static void Main()
 		{
 			var url = ApiUrl +
-					  "?auth-token=" + AuthenticationToken +
+					  "?auth-id=" + AuthenticationID +
+					  "&auth-token=" + AuthenticationToken +
 					  "&street=" + Street +
 					  "&city=" + City +
 					  "&state=" + State +

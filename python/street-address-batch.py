@@ -3,8 +3,12 @@ import pprint
 import urllib
 import urllib2
 
-URL = 'https://api.qualifiedaddress.com/street-address/?auth-token={0}'.format(
-    urllib.quote(r'YOUR_AUTHENTICATION_TOKEN')
+# Obtain an authentication ID/token pair from your
+# SmartyStreets account and put them in below.
+
+URL = 'https://api.qualifiedaddress.com/street-address/?auth-id={0}&auth-token={1}'.format(
+    urllib.quote(r'<auth id here>'),
+    urllib.quote(r'<raw auth token here>')
 )
 
 addresses = [

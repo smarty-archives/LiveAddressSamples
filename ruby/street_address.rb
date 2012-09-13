@@ -3,7 +3,10 @@ require 'json'
 require 'net/http'
 
 # Remember to URL encode anything that could have 
-# spaces (street, city) or special characters (auth-token)
+# spaces (street, city) or special characters (auth-token).
+
+# Obtain an authentication ID/token pair from your
+# SmartyStreets account and put them in below.
 
 URL = 'api.qualifiedaddress.com'
 STREET = CGI::escape('1 infinite loop')
@@ -11,6 +14,7 @@ CITY = CGI::escape('cupertino')
 STATE = 'ca'
 ZIP_CODE = '95014'
 NUMBER_OF_CANDIDATES = '1'
+AUTH_ID = CGI::escape('YOUR_AUTHENTICATION_ID_HERE')
 AUTH_TOKEN = CGI::escape('YOUR_AUTHENTICATION_TOKEN_HERE')
 
 QUERY_STRING = '/street-address/?' +
@@ -19,6 +23,7 @@ QUERY_STRING = '/street-address/?' +
 	'&state=' + STATE +
 	'&zipcode=' + ZIP_CODE +
 	'&candidates=' + NUMBER_OF_CANDIDATES +
+	'&auth-id=' + AUTH_ID +
 	'&auth-token=' + AUTH_TOKEN
 
 http = Net::HTTP.new(URL)

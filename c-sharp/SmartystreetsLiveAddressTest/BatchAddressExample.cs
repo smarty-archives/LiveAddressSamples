@@ -7,6 +7,7 @@ namespace SmartystreetsLiveAddressTest
 	public class BatchAddressExample
 	{
 		private readonly string apiUrl;
+		private readonly string authenticationId;
 		private readonly string authenticationToken;
 		private const string RequestPayload =
 			@"[
@@ -26,15 +27,16 @@ namespace SmartystreetsLiveAddressTest
 			}
 		]";
 
-		public BatchAddressExample(string apiUrl, string authenticationToken)
+		public BatchAddressExample(string apiUrl, string authenticationId, string authenticationToken)
 		{
 			this.apiUrl = apiUrl;
+			this.authenticationId = authenticationId;
 			this.authenticationToken = authenticationToken;
 		}
 
 		public string Execute()
 		{
-			var url = new Uri(this.apiUrl + "?auth-token=" + this.authenticationToken);
+			var url = new Uri(this.apiUrl + "?auth-id=" + this.authenticationId + "&auth-token=" + this.authenticationToken);
 			var request = (HttpWebRequest)WebRequest.Create(url);
 			request.Method = "POST";
 

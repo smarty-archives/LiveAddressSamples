@@ -9,9 +9,9 @@
  *
  * http://smartystreets.com/products/liveaddress-api
  *
- * INSTRUCTIONS: Put a REST authentication token (URL-encoded!) from your
- * SmartyStreets account into the "authToken" variable below.
- * Make sure json-simple is loaded.
+ * INSTRUCTIONS: Put an ID/token pair (URL-encoded!) from your
+ * SmartyStreets account into the authId and authToken variables
+ * below. Make sure the json-simple package is loaded.
 **/
 
 import java.io.*;
@@ -25,11 +25,12 @@ public class LiveAddressExample
 	public static void main(String[] args)
 	{
 
-		// Put your authentication token here (don't forget you need the encoded form)
-		String authToken = "PUT_AUTHENTICATION_TOKEN_HERE";
+		// Put your authentication ID/token here (don't forget you need the encoded form)
+		String authId = "<ID>";
+		String authToken = "<URL-ENCODED TOKEN>";
 
 		// The REST endpoint
-		String url = "https://api.qualifiedaddress.com/street-address/?auth-token=" + authToken;
+		String url = "https://api.qualifiedaddress.com/street-address/?auth-id=" + authId + "&auth-token=" + authToken;
 		
 		String response = ""; // Declared here for scope
 

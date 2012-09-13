@@ -16,8 +16,9 @@
 
 
 
-// Your authentication token
-$authToken = urlencode("YOUR-AUTH-TOKEN-HERE");
+// Your authentication ID/token (obtained in your SmartyStreets account)
+$authId = urlencode("raw ID here");
+$authToken = urlencode("raw token here");
 
 // Simulated input received from the webpage's POST request
 $json_input = "[
@@ -49,7 +50,7 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 curl_setopt($ch, CURLOPT_VERBOSE, 0);
 // Use the next line if you prefer to use your Javascript API token rather than your REST API token.
 //curl_setopt($ch, CURLOPT_REFERER, "http://YOUR-AUTHORIZED-DOMAIN-HERE");
-curl_setopt($ch, CURLOPT_URL, "https://api.qualifiedaddress.com/street-address/?auth-token={$authToken}");
+curl_setopt($ch, CURLOPT_URL, "https://api.qualifiedaddress.com/street-address/?auth-id={$authId}&auth-token={$authToken}");
 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_input);
 
 // Output comes back as a JSON string.

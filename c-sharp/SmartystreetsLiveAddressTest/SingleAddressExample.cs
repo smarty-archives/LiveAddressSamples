@@ -12,10 +12,11 @@ namespace SmartystreetsLiveAddressTest
 		private static readonly string ZipCode = HttpUtility.UrlEncode("84604");
 		private readonly string url;
 
-		public SingleAddressExample(string apiUrl, string authenticationToken)
+		public SingleAddressExample(string apiUrl, string authenticationId, string authenticationToken)
 		{
 			this.url = apiUrl +
-				"?auth-token=" + authenticationToken +
+				"?auth-id=" + authenticationId +
+				"&auth-token=" + authenticationToken +
 				"&street=" + Street +
 				"&city=" + City +
 				"&state=" + State +

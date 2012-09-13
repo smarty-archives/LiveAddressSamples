@@ -15,15 +15,15 @@
  */
 
 
-// Put your own auth token here (you can use either the REST auth
-// tokens or the HTML identifiers)
+// Put your own auth ID/token values here (obtained from your account)
+$authId = urlencode("raw ID here");
 $authToken = urlencode("raw token here");
 
 // Address input (one line, not split into components)
 $address = urlencode("3785 s las vegs av. los vegas, nevada");
 
 // Build the URL
-$req = "https://api.qualifiedaddress.com/street-address/?street={$address}&auth-token={$authToken}";
+$req = "https://api.qualifiedaddress.com/street-address/?street={$address}&auth-id={$authId}&auth-token={$authToken}";
 
 // GET request and turn into associative array
 $result = json_decode(file_get_contents($req));
