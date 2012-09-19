@@ -1,0 +1,5 @@
+street	city	state	zipcode
+3214 N University Ave #409	Provo	UT	84604
+1 Infinite Loop	Cupertino	CA	
+1600 Amphitheatre Parkway	Mountain View	CA	94043
+1600 Pennsylvania ave	washington	DC	20502
