@@ -11,8 +11,8 @@ thorough testing in your own system. This library does not
 handle the raw JSON output except return it to your calling
 functions. No jQuery dependencies required.
 
-Always call "LiveAddress.init('12345678')" first, replacing
-"12345678" with your HTML identifier. Then for each call
+Always call "LiveAddress.init('1234567...')" first, replacing
+"1234567..." with your HTML key. Then for each call
 to LiveAddress, supply a callback function to handle
 the output.
 
@@ -63,7 +63,7 @@ LiveAddress.components("123 main 12345", function(comp) {
 
 var LiveAddress = (function()
 {
-	var _id;
+	var _id, _token;
 	var _requests = [];
 	var _batches = {};
 	var _counter = 0;
@@ -119,8 +119,11 @@ var LiveAddress = (function()
 
 	function _queryString(reqid)
 	{
-		var request = _requests[reqid];
-		var qs = "?auth-token=" + _id + "&candidates=" + _candidates;
+		var request = _requests[reqid], qs;
+		if (_id && _token)
+			qs = "?auth-id=" + _id + "&auth-token=" + _token + "&candidates=" + _candidates;
+		else
+			qs = "?auth-token=" + _id + "&candidates=" + _candidates;
 		for (prop in request.fields)
 			qs += "&" + prop + "=" + encodeURIComponent(request.fields[prop]);
 		qs += "&callback=" + encodeURIComponent("LiveAddress.request(\"" + reqid + "\").callback");
@@ -132,7 +135,7 @@ var LiveAddress = (function()
 		for (i in reqids)
 		{
 			var dom = document.createElement("script");
-			dom.src = "https://api.qualifiedaddress.com/street-address/"
+			dom.src = "https://api.qualifiedaddress.com/street-address"
 				+ _queryString(reqids[i]);
 			document.body.appendChild(dom);
 			_requests[reqids[i]].DOM = dom;
@@ -145,9 +148,10 @@ var LiveAddress = (function()
 
 
 	return {
-		init: function(identifier)
+		init: function(authId, authToken)
 		{
-			_id = encodeURIComponent(identifier);
+			_id = encodeURIComponent(authId || "");
+			_token = encodeURIComponent(authToken || "");
 		},
 
 		verify: function(addr, callback, wrapper)
