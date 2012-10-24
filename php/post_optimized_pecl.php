@@ -63,6 +63,10 @@ for ($i = 0; $i < $requests; $i ++)
     $end = microtime(true);
     $ms = ($end - $start) * 1000;
 
+    // For the record, you can get the response with:
+    // $response = $request->getResponseBody();
+    // Then json_decode() to use the values in PHP.
+
     $max = $ms > $max ? $ms : $max;
     $min = $ms < $min ? $ms : $min;
     $sum += $ms;
