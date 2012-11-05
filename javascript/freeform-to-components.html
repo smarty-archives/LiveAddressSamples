@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Parse freeform (single-line) addresses into components</title>
+	<script type="text/javascript" src="https://raw.github.com/smartystreets/LiveAddressSamples/master/javascript/liveaddress.min.js"></script>
+	<style>
+html, body {
+	background: #FAFAFA;
+}
+
+body {
+	font-family: sans-serif;
+	line-height: 1.5em;
+	font-size: 14px;
+	width: 90%;
+	margin: 0 auto;
+}
+
+table {
+	border: none;
+}
+
+td {
+	white-space: nowrap;
+	padding: 0;
+}
+
+textarea,
+input[type=text] {
+	font-family: "Monaco", "Courier New", sans-serif;
+	font-size: 12px;
+	line-height: 1.5em;
+	padding: 3px;
+}
+
+textarea {
+	width: 95%;
+	padding: 7px;
+	height: 550px;
+}
+
+textarea[disabled],
+textarea[readonly],
+input[disabled],
+input[readonly] {
+	background: #F3F3F3;
+}
+
+button {
+	font-size: 18px;
+}
+
+table#io {
+	width: 100%;
+}
+
+td#input, td#output {
+	width: 50%;
+	min-width: 200px;
+	padding: 0;
+}
+
+p {
+	margin: 0;
+	max-width: 900px;
+	width: 100%;
+	padding-bottom: 10px;
+	color: #555;
+}
+
+#statusDom {
+	font-family: "Monaco", "Courier New", sans-serif;
+}
+	</style>
+</head>
+<body>
+
+<a href="javascript:location.reload()" style="float: right;">Reload page</a>
+<h1>Convert freeform addresses into components</h1>
+
+<p>
+	This tool is provided courtesy of <a href="http://smartystreets.com">SmartyStreets</a>.
+	You may use it to transform a list of single-line (freeform) addresses into their components.
+	Supply a valid Secret Key Pair from your account. Each valid address will
+	use 1 API lookup. When you submit, your browser will be making many requests in succession.
+	Scroll down for the "Start" button, and to view progress.
+</p>
+
+
+<table>
+	<tr>
+		<td><b>auth-id:</b></td>
+		<td><input type="text" id="auth-id" size="40" value=""></td>
+	</tr>
+	<tr>
+		<td><b>auth-token:</b></td>
+		<td><input type="text" id="auth-token" size="95" value=""> (raw)</td>
+	</tr>
+</table><br>
+
+<table id="io">
+	<tr>
+		<td id="input">
+			<big><b>INPUT</b></big>
+			&nbsp; (one freeform address per line)<br><br>
+
+			<textarea id="bulk-slap-addresses">11 Phelan Ave, San Francisco, CA
+1109 Ninth Phoenix AZ 85007
+51 Main Street, Rancho MO, 13532
+1 north rosedale, street, Baltimore, MD
+158 reed Lakewd. colo. 80226</textarea>
+		</td>
+
+		<td id="output">
+			<big><b>OUTPUT</b></big>
+			&nbsp; (CSV format)
+			&nbsp; &nbsp; <a href="javascript:fields.output.focus();fields.output.select();">Select All</a><br><br>
+
+			<textarea id="bulk-output" readonly></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align: center;">
+			<button onclick="start()" id="start-pause-continue"></button>
+			&nbsp; &nbsp;
+			<button onclick="stop()" id="stop-reset" disabled></button>
+			&nbsp; &nbsp;
+			<button onclick="step()" id="step"></button>
+		</td>
+		<td>
+			<div id="statusDom"><!-- Populated by Javascript --></div>
+		</td>
+	</tr>
+</table>
+
+<br><br>
+<br><br>
+
+
+<p>
+	<b>DISCLAIMER:</b> By using this utility, you understand there are
+	<a href="http://smartystreets.com/kb/faq/parse-and-verify-freeform-street-addresses" target="_blank">certain things you should know
+	about processing single-line (freeform) addresses</a>. Generally, the results are satisfactory for most purposes.
+	However, CASS&trade; accuracy cannot be guaranteed. Some addresses, for example
+	those to unique ZIP codes, may produce unexpected (yet still valid) results. SmartyStreets is not liable for any damages,
+	costs, misdirected mail, etc, if you choose to use this tool. Its primary purpose is to help split a list of single-line
+	addresses into components. If you need CASS&trade; accuracy, take the results from this tool and run them through
+	<a href="http://smartystreets.com/products/liveaddress-lists" target="_blank">LiveAddress for Lists</a>. This HTML/Javascript
+	tool is not a SmartyStreets product and is not officially supported.
+</p>
+
+
+<p>
+	<b>ACCOUNT SECURITY:</b> This HTML file is meant to be run from within your browser using a Secret Key Pair from your
+	account. We strongly recommend you keep your Key Pair values secret, and do not publish them where they can be viewed
+	by others. You are welcome to host this page on your public web server, however, we strongly advise against its use
+	there so as to protect the integrity of your purchases. Use this utility from a trusted computer and network. Successful
+	queries made to LiveAddress API using any of your auth-id/auth-token values, including each one from this tool,
+	<i>will</i> decrement your available lookups.
+</p>
+
+
+<br><br>
+
+
+
+<script type="text/javascript">
+
+/**
+ (c) 2012 SmartyStreets.
+ Provided for convenience only. Use at your own risk.
+**/
+
+
+var buttonHTML = {
+	start: "START &#9654;",
+	pause: "PAUSE &#10073;&#10073;",
+	stop: "STOP &#9724;",
+	reset: "RESET",
+	step: "STEP &#10073;&#9656;",
+	stopping: "STOPPING...",
+	pausing: "PAUSING...",
+	resume: "CONTINUE &#9654;"
+};
+
+var util = {
+	addresses: [],
+	done: 1,
+	total: 0,
+	stopFlag: false,
+	pauseFlag: false,
+	running: false
+};
+
+var buttons = {}, fields = {}, statusDom;
+
+window.onload = function()
+{
+	buttons.startPauseContinue = document.getElementById('start-pause-continue');
+	buttons.stopReset = document.getElementById('stop-reset');
+	buttons.step = document.getElementById('step');
+
+	fields.input = document.getElementById('bulk-slap-addresses');
+	fields.output = document.getElementById('bulk-output');
+	fields.authid = document.getElementById('auth-id');
+	fields.authtoken = document.getElementById('auth-token');
+
+	statusDom = document.getElementById("statusDom");
+
+	buttons.startPauseContinue.innerHTML = buttonHTML.start;
+	buttons.stopReset.innerHTML = buttonHTML.stop;
+	buttons.step.innerHTML = buttonHTML.step;
+};
+
+
+function start()
+{
+	var id = fields.authid.value;
+	var token = fields.authtoken.value;
+
+	if (fields.output.value.length > 3)
+		if (!hardReset())
+			return false;
+
+	util.addresses = fields.input.value.match(/[^\r\n]+/g);
+	util.total = util.addresses.length;
+
+	if (!util.total)
+		return;
+
+	if (!id || !token)
+		return alert("Please provide an auth-id and auth-token from your account");
+
+	LiveAddress.init(id, token);
+
+	fields.input.setAttribute('readonly', 'readonly');
+	fields.authid.setAttribute('readonly', 'readonly');
+	fields.authtoken.setAttribute('readonly', 'readonly');
+
+	buttons.startPauseContinue.innerHTML = buttonHTML.pause;
+	buttons.startPauseContinue.disabled = false;
+	buttons.startPauseContinue.onclick = pause;
+
+	buttons.stopReset.innerHTML = buttonHTML.stop;
+	buttons.stopReset.disabled = false;
+	buttons.stopReset.onclick = stop;
+
+	buttons.step.disabled = true;
+
+	statusDom.innerHTML = "Processing " + util.done + " of " + util.total + "...";
+	fields.output.value = "Street Address,City,State,ZIP Code\r\n";
+	recursiveBulk();
+}
+
+
+function pause()
+{
+	buttons.startPauseContinue.innerHTML = buttonHTML.pausing;
+	buttons.startPauseContinue.disabled = true;
+	buttons.stopReset.disabled = true;
+	buttons.step.disabled = true;
+	util.pauseFlag = true;
+}
+
+function doPause()
+{
+	util.pauseFlag = false;
+	util.running = false;
+	statusDom.innerHTML = "CURRENTLY PAUSED. (Done with " + (util.done - 1) + " of " + util.total + " addresses)";
+
+	buttons.startPauseContinue.innerHTML = buttonHTML.resume;
+	buttons.startPauseContinue.disabled = false;
+	buttons.startPauseContinue.onclick = resume;
+
+	buttons.stopReset.disabled = false;
+	buttons.step.disabled = false;
+}
+
+function resume()
+{
+	buttons.startPauseContinue.innerHTML = buttonHTML.pause;
+	buttons.startPauseContinue.disabled = false;
+	buttons.startPauseContinue.onclick = pause;
+
+	buttons.stopReset.innerHTML = buttonHTML.stop;
+	buttons.stopReset.disabled = false;
+	buttons.stopReset.onclick = stop;
+
+	buttons.step.disabled = true;
+
+	recursiveBulk();
+}
+
+function stop()
+{
+	if (!confirm("You will have to start over in order to resume. Really stop?"))
+		return false;
+
+	if (!util.running)
+		doStop();
+	else
+	{
+		buttons.startPauseContinue.innerHTML = buttonHTML.stopping;
+		buttons.startPauseContinue.disabled = true;
+		buttons.stopReset.disabled = true;
+		buttons.step.disabled = true;
+		util.stopFlag = true;
+	}
+
+	return true;
+}
+
+function doStop()
+{
+	util.stopFlag = false;
+	util.pauseFlag = false;
+	util.running = false;
+	statusDom.innerHTML = "ABORTED. (Processed " + (util.done - 1) + " of " + util.total + " addresses)";
+
+	fields.input.removeAttribute('readonly');
+	fields.authid.removeAttribute('readonly');
+	fields.authtoken.removeAttribute('readonly');
+
+	buttons.startPauseContinue.innerHTML = buttonHTML.start;
+	buttons.startPauseContinue.disabled = true;
+	buttons.startPauseContinue.onclick = start;
+
+	buttons.stopReset.innerHTML = buttonHTML.reset;
+	buttons.stopReset.disabled = false;
+	buttons.stopReset.onclick = hardReset;
+
+	buttons.step.disabled = true;
+}
+
+function hardReset()
+{
+	if (!confirm("This will clear the OUTPUT window, but preserve the INPUT window. Proceed?"))
+		return false;
+	else
+		return reset();
+}
+
+function reset(keepOutput)
+{
+	util.addresses = [];
+	util.done = 1;
+	util.total = 0;
+
+	statusDom.innerHTML = "";
+	
+	if (!keepOutput)
+		fields.output.value = "";
+	
+	buttons.startPauseContinue.innerHTML = buttonHTML.start;
+	buttons.startPauseContinue.disabled = false;
+	buttons.startPauseContinue.onclick = start;
+
+	buttons.step.disabled = false;
+
+	buttons.stopReset.innerHTML = buttonHTML.stop;
+	buttons.stopReset.disabled = true;
+	buttons.stopReset.onclick = stop;
+
+	util.running = false;
+
+	return true;
+}
+
+
+function step()
+{
+	if (!util.total)
+		start();
+	else
+		recursiveBulk();
+	
+	if (util.addresses.length > 0)
+		pause();
+}
+
+function finish()
+{
+	reset(true);
+	statusDom.innerHTML = "ALL DONE!";
+	fields.input.removeAttribute('readonly');
+	fields.authid.removeAttribute('readonly');
+	fields.authtoken.removeAttribute('readonly');
+	alert("Finished! Copy and paste the output into a CSV file.");
+}
+
+
+function recursiveBulk()
+{
+	util.running = true;
+
+	if (util.pauseFlag)
+		return doPause();
+	else if (util.stopFlag)
+		return doStop();
+
+	LiveAddress.components(util.addresses[0], function(results)
+	{
+		// SUCCESSFUL REQUEST
+		statusDom.innerHTML = "Processing " + (++util.done) + " of " + util.total + "...";
+		
+		if (results.length == 0)
+		{
+			util.addresses.splice(0, 1); // Pop the top address
+			fields.output.value += ",,,\r\n";
+			fields.output.scrollTop = fields.output.scrollHeight;
+			return util.addresses.length > 0 ? recursiveBulk() : finish(); // Keep going with others
+		}
+		
+		fields.output.value += csv(results[0].first_line) + ","
+				+ csv(results[0].city_name) + ","
+				+ csv(results[0].state_abbreviation) + ","
+				+ csv(results[0].zipcode + "-" + results[0].plus4_code)
+				+ "\r\n";
+
+		fields.output.scrollTop = fields.output.scrollHeight;
+		
+		util.addresses.splice(0, 1);
+		
+		return util.addresses.length > 0 ? recursiveBulk() : finish();
+	}, function(input) {
+		// REQUEST TIMED OUT
+		statusDom.innerHTML = "Processing " + (++util.done) + " of " + util.total + "...";
+		util.addresses.splice(0, 1); // Pop the top address
+		fields.output.value += "(REQUEST TIMED OUT),?,?,?\r\n";
+		return util.addresses.length > 0 ? recursiveBulk() : finish(); // Keep going with others
+	});
+}
+
+// Make a string safe to be delimited by commas
+function csv(str)
+{
+	str = str.replace(/"/g, '""');
+	if (str.indexOf(",") > -1 || str.indexOf("\n") > -1 || str.indexOf("\r") > -1)
+		str = '"' + str + '"';
+	return str;
+}
+
+window.onbeforeunload = function() {
+	return "ALL FIELDS WILL BE CLEARED.";
+};
+</script>
+</body>
+</html>
