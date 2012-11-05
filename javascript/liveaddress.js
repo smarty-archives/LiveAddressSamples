@@ -9,7 +9,7 @@ away the JSONP requests and other lower-level operations.
 We advise against using this code in production without
 thorough testing in your own system. This library does not
 handle the raw JSON output except return it to your calling
-functions. No jQuery dependencies required.
+functions. No other dependencies required (not even jQuery).
 
 Always call "LiveAddress.init('1234567...')" first, replacing
 "1234567..." with your HTML key. Then for each call
@@ -58,27 +58,35 @@ LiveAddress.components("123 main 12345", function(comp) {
 });
 
 
+You can also pass in a timeout callback as the last parameter,
+which is executed in case the query times out (a timeout is 3
+failed attempts, where we wait 3.5 seconds for each one). The
+input values are passed back to the timeout function as they were
+received (except if a string was passed in the value comes
+back as an object with the string in the "street" field.)
+
 */
 
 
 var LiveAddress = (function()
 {
 	var _id, _token;
-	var _requests = [];
+	var _requests = {};
 	var _batches = {};
+	var _timers = {};
 	var _counter = 0;
-	var _candidates = 5; // You can customize this: max. results per address
+	var _candidates = 5;	// You can customize this: maximum results per address
+	var _timeout = 3500;	// Milliseconds until a timeout is counted ("1 attempt")
+	var _maxAttempts = 3;	// Maximum number of attempts for a single request before finally timing out
 
-	function _buildFreeformRequest(addr, callback, wrapper)
+	function _buildFreeformRequest(addr, callback, wrapper, timeout)
 	{
 		// Here we expect addr to be a string (ID or actual address)
 		var elem = document.getElementById(addr);
-		return _buildComponentizedRequest({
-			street: (elem ? elem.value : addr)
-		}, callback, wrapper);
+		return _buildComponentizedRequest({ street: (elem ? elem.value : addr) }, callback, wrapper, timeout);
 	}
 
-	function _buildComponentizedRequest(addr, callback, wrapper)
+	function _buildComponentizedRequest(addr, callback, wrapper, timeout)
 	{
 		// We expect addr to be at least one object, mapping fields to values
 		if (!addr)
@@ -98,12 +106,12 @@ var LiveAddress = (function()
 		};
 
 		for (var idx in addr)
-			reqids.push(_buildRequest(addr[idx], batch_id, idx));
+			reqids.push(_buildRequest(addr[idx], batch_id, idx, timeout));
 
 		return reqids;
 	}
 
-	function _buildRequest(addr, batch_id, index)
+	function _buildRequest(addr, batch_id, index, timeout)
 	{
 		var address = { fields: addr };
 
@@ -111,9 +119,9 @@ var LiveAddress = (function()
 		address.inputIndex = parseInt(index);
 		address.json = [];
 		address.batch = batch_id;
-		address.callback = function(response) { LiveAddress.callback(address.id, response); }
+		address.userTimeout = timeout;
+		address.callback = function(response) { _callback(address.id, response); }
 		_requests[address.id] = address;
-
 		return address.id;
 	}
 
@@ -139,7 +147,58 @@ var LiveAddress = (function()
 				+ _queryString(reqids[i]);
 			document.body.appendChild(dom);
 			_requests[reqids[i]].DOM = dom;
+			_timers[reqids[i]] = {
+				attempts: _timers[reqids[i]] ? _timers[reqids[i]].attempts || 0 : 0,
+				timeoutID: setTimeout(_timeoutHandler(reqids[i]), _timeout)
+			};
 		}
+	}
+
+	function _callback(reqid, data)
+	{
+		var request = _requests[reqid];
+		var batch = _batches[request.batch];
+
+		for (var i in data)
+			data[i].input_index = request.inputIndex;
+		batch.json = batch.json.concat(data);
+
+		document.body.removeChild(request.DOM);
+		delete _requests[reqid];
+
+		clearTimeout(_timers[reqid].timeoutID);
+		delete _timers[reqid];
+
+		if (++batch.returned == batch.size)
+		{
+			var result = batch.userCallback(batch.wrap(batch.json));
+			delete _batches[request.batch];
+			return result;
+		}
+	}
+
+	function _timeoutHandler(reqid)
+	{
+		return function()
+		{
+			if (++_timers[reqid].attempts < _maxAttempts)
+				_request([reqid]);
+			else if (typeof _requests[reqid].userTimeout === 'function')
+				_requests[reqid].userTimeout(_requests[reqid].fields);
+		};
+	}
+
+	function _coordinates(responseAddress)
+	{
+		if (!responseAddress || typeof responseAddress !== 'object')
+			return undefined;
+
+		return {
+			lat: responseAddress.metadata.latitude,
+			lon: responseAddress.metadata.longitude,
+			precision: responseAddress.metadata.precision,
+			coords: responseAddress.metadata.latitude + ", " + responseAddress.metadata.longitude
+		};
 	}
 
 
@@ -154,15 +213,15 @@ var LiveAddress = (function()
 			_token = encodeURIComponent(authToken || "");
 		},
 
-		verify: function(addr, callback, wrapper)
+		verify: function(addr, callback, wrapper, timeout)
 		{
 			var reqids;
 
 			if (typeof addr === "string")
-				reqids = _buildFreeformRequest(addr, callback, wrapper);
+				reqids = _buildFreeformRequest(addr, callback, wrapper, timeout);
 
 			else if (typeof addr === "object" && !(addr instanceof Array))
-				reqids = _buildComponentizedRequest(addr, callback, wrapper);
+				reqids = _buildComponentizedRequest(addr, callback, wrapper, timeout);
 
 			else if (addr instanceof Array)
 			{
@@ -178,61 +237,38 @@ var LiveAddress = (function()
 					else
 						addresses.push(addr[idx]);
 				}
-				reqids = _buildComponentizedRequest(addresses, callback, wrapper);
+				reqids = _buildComponentizedRequest(addresses, callback, wrapper, timeout);
 			}
 
 			_request(reqids);
 		},
 
-		coords: function(address)
-		{
-			if (!address)
-				return {};
-
-			return {
-				lat: address.metadata.latitude,
-				lon: address.metadata.longitude
-			};
-		},
-
-		coordinates: function(address)
-		{
-			if (!address)
-				return undefined;
-
-			return {
-				lat: address.metadata.latitude,
-				lon: address.metadata.longitude,
-				precision: address.metadata.precision,
-				coords: address.metadata.latitude + ", " + address.metadata.longitude
-			};
-		},
-
-		request: function(reqid)
+		request: function(reqid)	// For internal use only; must be accessible from the outside (when a JSONP request succeeds)
 		{
 			return _requests[reqid];
 		},
 
-		geocode: function(addr, callback)
+		geocode: function(addr, callback, timeout)
 		{
-			this.verify(addr, callback, function(data) {
-
+			this.verify(addr, callback, function(data)
+			{
 				if (data.length == 1)
-					return LiveAddress.coordinates(data[0]);
+					return _coordinates(data[0]);
 				else
 				{
 					var coords = [];
 					for (var i in data)
-						coords.push(LiveAddress.coordinates(data[i]));
+						coords.push(_coordinates(data[i]));
 					return coords;
 				}
 
-			});
+			}, timeout);
 		},
 
-		components: function(addr, callback)
+		components: function(addr, callback, timeout)
 		{
-			this.verify(addr, callback, function(data) {
+			this.verify(addr, callback, function(data)
+			{
 				var comp = [];
 				for (idx in data)
 				{
@@ -245,34 +281,14 @@ var LiveAddress = (function()
 					comp.push(data[idx].components);
 				}
 				return comp;
-			});
+			}, timeout);
 		},
 
-		county: function(addr, callback)
+		county: function(addr, callback, timeout)
 		{
 			this.verify(addr, callback, function(data) {
 				return data[0].metadata.county_name;
-			});
-		},
-
-		callback: function(reqid, data)
-		{
-			var request = _requests[reqid];
-			var batch = _batches[request.batch];
-
-			for (var i in data)
-				data[i].input_index = request.inputIndex;
-			batch.json = batch.json.concat(data);
-
-			document.body.removeChild(request.DOM);
-			delete _requests[reqid];
-
-			if (++batch.returned == batch.size)
-			{
-				var result = batch.userCallback(batch.wrap(batch.json));
-				delete _batches[request.batch];
-				return result;
-			}
+			}, timeout);
 		}
 	};
 

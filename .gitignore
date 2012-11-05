@@ -1,3 +1,6 @@
+# Custom folders
+_gitignore
+
 .idea
 *.pyc
 *.bak
