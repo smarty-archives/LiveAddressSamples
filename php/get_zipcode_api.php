@@ -4,7 +4,7 @@
 $authId = urlencode("raw ID here");
 $authToken = urlencode("raw token here");
 
-// Input. You can fill out any combination of the 3 values and leave any blank
+// Input. You can fill out any combination of the 3 values (except city only) and leave any blank
 $city = urlencode("");
 $state = urlencode("");
 $zipcode = urlencode("90023");

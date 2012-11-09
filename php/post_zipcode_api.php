@@ -11,7 +11,7 @@ $authToken = urlencode("raw token here");
 
 // Your input... remember that this endpoint can accept practically any combination
 // of zip code, city, and/or state -- give what you can, we'll give back what we can.
-// You can send up to 100 lookups per request
+// You can send up to 100 lookups per request.
 $addresses = array(
     array(
         "city" => "Cupertino",

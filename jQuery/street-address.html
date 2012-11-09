@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Html LiveAddress API Example - jQuery.ajax Example</title>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<title>LiveAddress API Example - jQuery.ajax</title>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 </head>
 <body>
 
-	<div id="results"></div>
+	<pre id="results"></pre>
 
 	<script>
-		$(document).ready(function() {
+		$(function() {
 			$.ajax({
-				url: 'https://api.qualifiedaddress.com/street-address/',
-				dataType: 'JSONP', // NOTE: This is what allows the cross-domain ajax call.
+				url: 'https://api.qualifiedaddress.com/street-address',
+				dataType: 'JSONP',  // NOTE: This is what allows the cross-domain ajax call.
 				data: {
-					'auth-token': 'YOUR_REST_AUTHENTICATION_TOKEN_HERE',
+					'auth-token': 'your html key here',      // Put your HTML Key in this input
 					'street': '1600 Amphitheatre Parkway',
 					'city': 'Mountain View',
 					'state': 'CA',
@@ -22,8 +22,8 @@
 					'candidates': 1
 				},
 				success: function (data, status, xhr) {
-					var pretty = JSON.stringify(data, null, 4).replace( / /g, '&nbsp;').replace( /\n/g, '<br />');
-					$('div#results').html(pretty);
+					var pretty = JSON.stringify(data, null, 4).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+					$('#results').html(pretty);
 				}
 			});
 		});
