@@ -100,7 +100,7 @@
 ";
 		private static readonly string Url = ConfigurationManager.AppSettings["Url"];
 		private static readonly string QueryString = ConfigurationManager.AppSettings["QueryString"];
-		private static readonly string AuthId = HttpUtility.UrlEncode(ConfigurationManager.AppSettings["AuthId"]);
+		private static readonly string AuthId = ConfigurationManager.AppSettings["AuthId"];
 		private static readonly string AuthToken = HttpUtility.UrlEncode(ConfigurationManager.AppSettings["RawAuthToken"]);
 	}
 }
