@@ -145,7 +145,7 @@ var LiveAddress = (function()
 			var dom = document.createElement("script");
 			dom.src = "https://api.qualifiedaddress.com/street-address"
 				+ _queryString(reqids[i]);
-			document.body.appendChild(dom);
+			document.getElementsByTagName('body')[0].appendChild(dom);
 			_requests[reqids[i]].DOM = dom;
 			_timers[reqids[i]] = {
 				attempts: _timers[reqids[i]] ? _timers[reqids[i]].attempts || 0 : 0,
@@ -163,7 +163,7 @@ var LiveAddress = (function()
 			data[i].input_index = request.inputIndex;
 		batch.json = batch.json.concat(data);
 
-		document.body.removeChild(request.DOM);
+		document.getElementsByTagName('body')[0].removeChild(request.DOM);
 		delete _requests[reqid];
 
 		clearTimeout(_timers[reqid].timeoutID);
