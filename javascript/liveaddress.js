@@ -213,20 +213,19 @@ var LiveAddress = (function()
 			_token = encodeURIComponent(authToken || "");
 		},
 
-		verify: function(addr, callback, wrapper, timeout)
+		verify: function(addr, callback, timeout, wrapper)
 		{
 			var reqids;
 
 			if (typeof addr === "string")
-				reqids = _buildFreeformRequest(addr, callback, wrapper, timeout);
+				reqids = _buildFreeformRequest(addr, callback, timeout, wrapper);
 
 			else if (typeof addr === "object" && !(addr instanceof Array))
 				reqids = _buildComponentizedRequest(addr, callback, wrapper, timeout);
 
 			else if (addr instanceof Array)
 			{
-				// Batch request
-				var addresses = [];
+				var addresses = [];		// Batch request
 				for (idx in addr)
 				{
 					if (typeof addr[idx] == "string")
@@ -250,7 +249,7 @@ var LiveAddress = (function()
 
 		geocode: function(addr, callback, timeout)
 		{
-			this.verify(addr, callback, function(data)
+			this.verify(addr, callback, timeout, function(data)
 			{
 				if (data.length == 1)
 					return _coordinates(data[0]);
@@ -267,7 +266,7 @@ var LiveAddress = (function()
 
 		components: function(addr, callback, timeout)
 		{
-			this.verify(addr, callback, function(data)
+			this.verify(addr, callback, timeout, function(data)
 			{
 				var comp = [];
 				for (idx in data)
@@ -286,7 +285,7 @@ var LiveAddress = (function()
 
 		county: function(addr, callback, timeout)
 		{
-			this.verify(addr, callback, function(data) {
+			this.verify(addr, callback, timeout, function(data) {
 				return data[0].metadata.county_name;
 			}, timeout);
 		}
