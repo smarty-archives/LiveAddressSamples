@@ -79,14 +79,14 @@ var LiveAddress = (function()
 	var _timeout = 3500;	// Milliseconds until a timeout is counted ("1 attempt")
 	var _maxAttempts = 3;	// Maximum number of attempts for a single request before finally timing out
 
-	function _buildFreeformRequest(addr, callback, wrapper, timeout)
+	function _buildFreeformRequest(addr, callback, timeout, wrapper)
 	{
 		// Here we expect addr to be a string (ID or actual address)
 		var elem = document.getElementById(addr);
-		return _buildComponentizedRequest({ street: (elem ? elem.value : addr) }, callback, wrapper, timeout);
+		return _buildComponentizedRequest({ street: (elem ? elem.value : addr) }, callback, timeout, wrapper);
 	}
 
-	function _buildComponentizedRequest(addr, callback, wrapper, timeout)
+	function _buildComponentizedRequest(addr, callback, timeout, wrapper)
 	{
 		// We expect addr to be at least one object, mapping fields to values
 		if (!addr)
@@ -102,7 +102,7 @@ var LiveAddress = (function()
 			returned: 0,
 			json: [],
 			userCallback: callback,
-			wrap: wrapper || function(data) { return data; },
+			wrap: wrapper || function(data) { return data; }
 		};
 
 		for (var idx in addr)
@@ -221,7 +221,7 @@ var LiveAddress = (function()
 				reqids = _buildFreeformRequest(addr, callback, timeout, wrapper);
 
 			else if (typeof addr === "object" && !(addr instanceof Array))
-				reqids = _buildComponentizedRequest(addr, callback, wrapper, timeout);
+				reqids = _buildComponentizedRequest(addr, callback, timeout, wrapper);
 
 			else if (addr instanceof Array)
 			{
@@ -236,7 +236,7 @@ var LiveAddress = (function()
 					else
 						addresses.push(addr[idx]);
 				}
-				reqids = _buildComponentizedRequest(addresses, callback, wrapper, timeout);
+				reqids = _buildComponentizedRequest(addresses, callback, timeout, wrapper);
 			}
 
 			_request(reqids);
@@ -260,8 +260,7 @@ var LiveAddress = (function()
 						coords.push(_coordinates(data[i]));
 					return coords;
 				}
-
-			}, timeout);
+			});
 		},
 
 		components: function(addr, callback, timeout)
@@ -280,14 +279,14 @@ var LiveAddress = (function()
 					comp.push(data[idx].components);
 				}
 				return comp;
-			}, timeout);
+			});
 		},
 
 		county: function(addr, callback, timeout)
 		{
 			this.verify(addr, callback, timeout, function(data) {
 				return data[0].metadata.county_name;
-			}, timeout);
+			});
 		}
 	};
 
