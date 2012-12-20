@@ -143,7 +143,7 @@ var LiveAddress = (function()
 		for (i in reqids)
 		{
 			var dom = document.createElement("script");
-			dom.src = "https://api.qualifiedaddress.com/street-address"
+			dom.src = "https://api.smartystreets.com/street-address"
 				+ _queryString(reqids[i]);
 			document.getElementsByTagName('body')[0].appendChild(dom);
 			_requests[reqids[i]].DOM = dom;

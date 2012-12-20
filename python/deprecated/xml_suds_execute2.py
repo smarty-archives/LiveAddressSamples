@@ -7,7 +7,7 @@ from suds.client import Client
 
 KEY = file('key.txt').read()
 SUDS_CLIENT = 'suds.client'
-SERVICE_URL = 'https://api.qualifiedAddress.com/Address/v1/VerifyService.asmx?wsdl'
+SERVICE_URL = 'https://api.smartystreets.com/Address/v1/VerifyService.asmx?wsdl'
 ADDRESS_INCOMPLETE = 'ERROR: Address is not complete, not verifying.'
 QAD_DOWN = 'ERROR: QA Server error: '
 BAD_ADDRESS = 'ERROR: Address could not be verified.'

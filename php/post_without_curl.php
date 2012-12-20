@@ -49,7 +49,7 @@ $context = stream_context_create(
 
 // Do the request, and we'll time it just for kicks
 $start = microtime(true);
-$page = file_get_contents("https://api.qualifiedaddress.com/street-address/?auth-id={$authId}&auth-token={$authToken}", false, $context);
+$page = file_get_contents("https://api.smartystreets.com/street-address/?auth-id={$authId}&auth-token={$authToken}", false, $context);
 $end = microtime(true);
 
 

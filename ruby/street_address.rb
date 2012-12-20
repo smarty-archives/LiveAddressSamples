@@ -8,7 +8,7 @@ require 'net/http'
 # Obtain an authentication ID/token pair from your
 # SmartyStreets account and put them in below.
 
-URL = 'api.qualifiedaddress.com'
+URL = 'api.smartystreets.com'
 STREET = CGI::escape('1 infinite loop')
 CITY = CGI::escape('cupertino')
 STATE = 'ca'

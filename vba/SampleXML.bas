@@ -8,7 +8,7 @@ Sub SampleXMLRequest()
     
     ' Don't forget to replace this with your auth token and ID, url-encoded, and without
     ' the < > characters. Find this in your account under "Key Management" -> "Id/Key pairs"
-    strUrl = "https://api.qualifiedaddress.com/street-address/?auth-id=<YOUR ID HERE>&auth-token=<YOUR TOKEN HERE>"
+    strUrl = "https://api.smartystreets.com/street-address/?auth-id=<YOUR ID HERE>&auth-token=<YOUR TOKEN HERE>"
     
     ' Body of the POST request
     strReq = "<?xml version=""1.0"" encoding=""utf-8""?>" & _

@@ -18,7 +18,7 @@ $authId = urlencode("raw id here");
 $authToken = urlencode("raw token here");
 
 // The REST endpoint
-$url = "https://api.qualifiedaddress.com/street-address/?auth-id={$authId}&auth-token={$authToken}";
+$url = "https://api.smartystreets.com/street-address/?auth-id={$authId}&auth-token={$authToken}";
 
 // Your input to the API...
 $addresses = array(

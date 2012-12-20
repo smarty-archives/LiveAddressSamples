@@ -17,7 +17,7 @@ namespace RestBatch
 	{
 		// NOTE: All query string parameter values must be URL-encoded!
 		// TIP: Get an auth ID/token pair from your SmartyStreets account and put them below.
-		private const string ApiUrl = "https://api.qualifiedaddress.com/street-address/";
+		private const string ApiUrl = "https://api.smartystreets.com/street-address/";
 		private static readonly string AuthenticationID = HttpUtility.UrlEncode("YOUR_AUTH_ID_HERE");
 		private static readonly string AuthenticationToken = HttpUtility.UrlEncode("YOUR_RAW_AUTH_TOKEN_HERE");
 		private const string RequestPayload = @"[

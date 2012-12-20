@@ -30,7 +30,7 @@ public class LiveAddressExample
 		String authToken = "<URL-ENCODED TOKEN>";
 
 		// The REST endpoint
-		String url = "https://api.qualifiedaddress.com/street-address/?auth-id=" + authId + "&auth-token=" + authToken;
+		String url = "https://api.smartystreets.com/street-address/?auth-id=" + authId + "&auth-token=" + authToken;
 		
 		String response = ""; // Declared here for scope
 

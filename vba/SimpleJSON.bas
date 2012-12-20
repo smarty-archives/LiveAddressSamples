@@ -38,7 +38,7 @@ Public Sub Main()
     token = "AUTH-TOKEN"
     
     ' Create and GET the address verification request
-    request = "https://api.qualifiedaddress.com/street-address?" & _
+    request = "https://api.smartystreets.com/street-address?" & _
                 "street=" & URLEncode(street1) & _
                 "&street2=" & URLEncode(street2) & _
                 "&city=" & URLEncode(city) & _
