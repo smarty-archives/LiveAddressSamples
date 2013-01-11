@@ -24,7 +24,8 @@ def main():
     input_file = args[-2]
     input_filename = os.path.basename(input_file)
     output_file = args[-1]
-    data = open(input_file).read()
+    mode = 'rb' if input_file.endswith('.zip') else 'r'
+    data = open(input_file, mode).read()
     list_id = submit(data, input_filename)
     if list_id is None:
         return
