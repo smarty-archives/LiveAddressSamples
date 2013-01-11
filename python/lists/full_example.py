@@ -10,7 +10,6 @@ STATUS_URL = 'https://api.smartystreets.com/lists/{0}/?{1}'
 DOWNLOAD_URL = 'https://api.smartystreets.com/lists/{0}/download/?{1}'
 
 
-import datetime
 import hashlib
 import json
 import os
@@ -47,10 +46,14 @@ def submit(data, filename):
         'auth-token': AUTH_TOKEN
     }
 
+    headers = {'method': 'POST'}
+    if filename.endswith('.zip'):
+        headers['Content-Type'] = 'application/zip'
+
     request = urllib2.Request(
         URL.format(urllib.urlencode(query)),
         data=data,
-        headers={ 'method': 'POST' }
+        headers=headers
     )
 
     contents = submit_http_request(request)
