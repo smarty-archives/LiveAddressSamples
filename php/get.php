@@ -13,7 +13,7 @@ $input3 = urlencode("nevada");
 $req = "https://api.smartystreets.com/street-address/?street={$input1}&city={$input2}&state={$input3}&auth-id={$authId}&auth-token={$authToken}";
 
 // GET request and turn into associative array
-$result = json_decode(file_get_contents($req));
+$result = json_decode(file_get_contents($req),true);
 
 echo "<pre>";
 print_r($result);
