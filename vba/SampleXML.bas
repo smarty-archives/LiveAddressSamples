@@ -37,8 +37,9 @@ Sub SampleXMLRequest()
     ' change or be added to later, so make sure your method of parsing accepts that.
     ' Google and Stack Overflow are replete with helpful examples.
     
-    Dim xmlDoc As MSXML2.DOMDocument
-    Set xmlDoc = New MSXML2.DOMDocument
+    Dim xmlDoc As MSXML2.DOMDocument            ' In Office 2010, use: MSXML2.DOMDocument60
+    Set xmlDoc = New MSXML2.DOMDocument         ' on both these lines
+
     If Not xmlDoc.LoadXML(xmlHttp.responseText) Then
         Err.Raise xmlDoc.parseError.ErrorCode, , xmlDoc.parseError.reason
     End If
