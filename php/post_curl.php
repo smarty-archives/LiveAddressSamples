@@ -47,6 +47,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HEADER, 0);
+//curl_setopt($ch, CURLOPT_HTTPHEADER, array('x-standardize-only: true'));    // Enable this line if you want to only standardize addresses that are "good enough"
 curl_setopt($ch, CURLOPT_VERBOSE, 0);
 // Use the next line if you prefer to use your Javascript API token rather than your REST API token.
 //curl_setopt($ch, CURLOPT_REFERER, "http://YOUR-AUTHORIZED-DOMAIN-HERE");
