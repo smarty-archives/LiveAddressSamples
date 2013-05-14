@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Configuration;
-	using System.Web;
 	using Newtonsoft.Json;
 
 	public static class Program
@@ -11,10 +10,10 @@
 		private const string SingleAddressParameter = "single";
 		private const string BatchAddressParameter = "batch";
 		private static readonly string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
-		private static readonly string AuthenticationToken = 
-			HttpUtility.UrlEncode(ConfigurationManager.AppSettings["AuthenticationToken"]);
-		private static readonly SingleAddressExample Single = new SingleAddressExample(ApiUrl, AuthenticationToken);
-		private static readonly BatchAddressExample Batch = new BatchAddressExample(ApiUrl, AuthenticationToken);
+		private static readonly string AuthId = ConfigurationManager.AppSettings["AUTH-ID"];
+		private static readonly string AuthToken = ConfigurationManager.AppSettings["AUTH-TOKEN"];
+		private static readonly SingleAddressExample SingleAddress = new SingleAddressExample(ApiUrl, AuthId, AuthToken);
+		private static readonly BatchAddressExample BatchOfAddresses = new BatchAddressExample(ApiUrl, AuthId, AuthToken);
 
 		public static void Main()
 		{
@@ -38,7 +37,7 @@
 
 		private static string ExecuteExample(string choice)
 		{
-			return choice == SingleAddressParameter ? Single.Execute() : Batch.Execute();
+			return choice == SingleAddressParameter ? SingleAddress.Execute() : BatchOfAddresses.Execute();
 		}
 
 		private static void ParseResults(string rawResponse)
