@@ -16,14 +16,14 @@ namespace SmartystreetsLiveAddressTest
 				city: 'cupertino',
 				state: 'ca',
 				zipCode: '95014',
-				candidates: '10',
+				candidates: '10'
 			},
 			{
 				street: '1600 Pennsylvania ave',
 				city: 'Washington',
 				state: 'DC',
 				zipCode: '20500',
-				candidates: '10',
+				candidates: '10'
 			}
 		]";
 
