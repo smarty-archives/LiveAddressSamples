@@ -41,7 +41,7 @@ func main() {
 	qs.Add("zipcode",	"95014")
 
 	// Build the GET request
-	reqUrl := fmt.Sprintf("https://api.smartystreets.com/street-address/?%s", qs.Encode())
+	reqUrl := fmt.Sprintf("https://api.smartystreets.com/street-address?%s", qs.Encode())
 
 	// Make the request
 	resp, err := http.Get(reqUrl)
