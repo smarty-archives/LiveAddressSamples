@@ -116,11 +116,11 @@ var LiveAddress = (function()
 		var address = { fields: addr };
 
 		address.id = "addr_" + (_counter++);
-		address.inputIndex = parseInt(index);
+		address.inputIndex = parseInt(index, 10);
 		address.json = [];
 		address.batch = batch_id;
 		address.userTimeout = timeout;
-		address.callback = function(response) { _callback(address.id, response); }
+		address.callback = function(response) { _callback(address.id, response); };
 		_requests[address.id] = address;
 		return address.id;
 	}
@@ -132,7 +132,7 @@ var LiveAddress = (function()
 			qs = "?auth-id=" + _id + "&auth-token=" + _token + "&candidates=" + _candidates;
 		else
 			qs = "?auth-token=" + _id + "&candidates=" + _candidates;
-		for (prop in request.fields)
+		for (var prop in request.fields)
 			qs += "&" + prop + "=" + encodeURIComponent(request.fields[prop]);
 		qs += "&callback=" + encodeURIComponent("LiveAddress.request(\"" + reqid + "\").callback");
 		return qs;
@@ -140,7 +140,7 @@ var LiveAddress = (function()
 
 	function _request(reqids)
 	{
-		for (i in reqids)
+		for (var i in reqids)
 		{
 			var dom = document.createElement("script");
 			dom.src = "https://api.smartystreets.com/street-address"
@@ -226,7 +226,7 @@ var LiveAddress = (function()
 			else if (addr instanceof Array)
 			{
 				var addresses = [];		// Batch request
-				for (idx in addr)
+				for (var idx in addr)
 				{
 					if (typeof addr[idx] == "string")
 					{
@@ -268,7 +268,7 @@ var LiveAddress = (function()
 			this.verify(addr, callback, timeout, function(data)
 			{
 				var comp = [];
-				for (idx in data)
+				for (var idx in data)
 				{
 					data[idx].components.first_line = data[idx].delivery_line_1;
 					if (typeof data[idx].delivery_line_2 !== "undefined")
