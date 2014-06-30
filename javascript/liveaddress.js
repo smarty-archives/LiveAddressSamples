@@ -104,10 +104,10 @@ var LiveAddress = (function()
 			userCallback: callback,
 			wrap: wrapper || function(data) { return data; }
 		};
-
-		for (var idx in addr)
+		
+		for (idx = 0; idx < addr.length; idx++) { 
 			reqids.push(_buildRequest(addr[idx], batch_id, idx, timeout));
-
+		}
 		return reqids;
 	}
 
@@ -140,7 +140,7 @@ var LiveAddress = (function()
 
 	function _request(reqids)
 	{
-		for (var i in reqids)
+		for (i = 0; i < reqids.length; i++)
 		{
 			var dom = document.createElement("script");
 			dom.src = "https://api.smartystreets.com/street-address"
@@ -184,7 +184,9 @@ var LiveAddress = (function()
 			if (++_timers[reqid].attempts < _maxAttempts)
 				_request([reqid]);
 			else if (typeof _requests[reqid].userTimeout === 'function')
+			{
 				_requests[reqid].userTimeout(_requests[reqid].fields);
+			}
 		};
 	}
 
@@ -200,11 +202,6 @@ var LiveAddress = (function()
 			coords: responseAddress.metadata.latitude + ", " + responseAddress.metadata.longitude
 		};
 	}
-
-
-
-
-
 
 	return {
 		init: function(authId, authToken)
