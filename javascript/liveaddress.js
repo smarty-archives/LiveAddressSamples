@@ -105,9 +105,9 @@ var LiveAddress = (function()
 			wrap: wrapper || function(data) { return data; }
 		};
 		
-		for (idx = 0; idx < addr.length; idx++) { 
+		for (var idx = 0; idx < addr.length; idx++)
 			reqids.push(_buildRequest(addr[idx], batch_id, idx, timeout));
-		}
+		
 		return reqids;
 	}
 
@@ -140,7 +140,7 @@ var LiveAddress = (function()
 
 	function _request(reqids)
 	{
-		for (i = 0; i < reqids.length; i++)
+		for (var i = 0; i < reqids.length; i++)
 		{
 			var dom = document.createElement("script");
 			dom.src = "https://api.smartystreets.com/street-address"
