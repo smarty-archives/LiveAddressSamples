@@ -39,7 +39,7 @@ The only combination of fields that is required is one of the following:
 Street1, ZipCode
 Street1, City, State
 Street1, City, State, ZipCode
-klStreet1, LastLine (city/state/zipcode in a single field)
+Street1, LastLine (city/state/zipcode in a single field)
 
 The output of this program is a file that contains every field from the JSON
 response of the LiveAddress API.
