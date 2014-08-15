@@ -59,32 +59,32 @@ QUERY = {
     'auth-token': AUTH_TOKEN
 }
 JSON_PAYLOAD = """[
-	{
-		zipcode: '20500'
-	},
-	{
-		city: 'Cupertino',
-		state: 'CA'
-	},
-	{
-		city: 'Cupertino',
-		state: 'CA',
-		zipcode: '95014'
-	},
-	{
-	},
-	{
-		zipcode: 'eibn3ei2nb'
-	},
-	{
-		city: 'Does not exist',
-		state: 'CA'
-	},
-	{
-		city: 'Cupertino',
-		state: 'ca',
-		zipcode: '90210'
-	}
+    {
+        "zipcode": "20500"
+    },
+    {
+        "city": "Cupertino",
+        "state": "CA"
+    },
+    {
+        "city": "Cupertino",
+        "state": "CA",
+        "zipcode": "95014"
+    },
+    {
+    },
+    {
+        "zipcode": "eibn3ei2nb"
+    },
+    {
+        "city": "Does not exist",
+        "state": "CA"
+    },
+    {
+        "city": "Cupertino",
+        "state": "ca",
+        "zipcode": "90210"
+    }
 ]
 """
 
