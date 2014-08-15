@@ -5,17 +5,17 @@ import urllib
 # Obtain an authentication ID/token pair from your
 # SmartyStreets account and put them in below.
 
-LOCATION = 'https://api.smartystreets.com/street-address/'
-QUERY_STRING = urllib.urlencode({	# entire query sting must be URL-Encoded
-    'auth-id': r'<ID VALUE>',
-    'auth-token': r'<RAW TOKEN VALUE>',
-    'street': '1 infinite loop',
-    'city': 'cupertino',
-    'state': 'ca',
-    'zipCode': '95014',
-    'candidates': '1',
+LOCATION = "https://api.smartystreets.com/street-address/"
+QUERY_STRING = urllib.urlencode({   # entire query sting must be URL-Encoded
+    "auth-id": r"<ID VALUE>",
+    "auth-token": r"<RAW TOKEN VALUE>",
+    "street": "1 infinite loop",
+    "city": "cupertino",
+    "state": "ca",
+    "zipCode": "95014",
+    "candidates": "1",
 })
-URL = LOCATION + '?' + QUERY_STRING
+URL = LOCATION + "?" + QUERY_STRING
 
 response = urllib.urlopen(URL).read()
 structure = json.loads(response)
