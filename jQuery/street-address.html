@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>LiveAddress API Example - jQuery.ajax</title>
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <title>LiveAddress API Example - jQuery.ajax</title>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 </head>
 <body>
 
-	<pre id="results"></pre>
+    <pre id="results"></pre>
 
-	<script>
-		$(function() {
-			$.ajax({
-				url: 'https://api.smartystreets.com/street-address',
-				dataType: 'JSONP',  // NOTE: This is what allows the cross-domain ajax call.
-				data: {
-					'auth-token': 'your html key here',      // Put your HTML Key in this input
-					'street': '1600 Amphitheatre Parkway',
-					'city': 'Mountain View',
-					'state': 'CA',
-					'zipCode': '94043',
-					'candidates': 1
-				},
-				success: function (data, status, xhr) {
-					var pretty = JSON.stringify(data, null, 4).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
-					$('#results').html(pretty);
-				}
-			});
-		});
-	</script>
+    <script>
+        $(function() {
+            $.ajax({
+                url: "https://api.smartystreets.com/street-address",
+                dataType: "JSONP",  // NOTE: This is what allows the cross-domain ajax call.
+                data: {
+                    "auth-token": "your html key here",      // Put your HTML Key in this input
+                    "street": "1600 Amphitheatre Parkway",
+                    "city": "Mountain View",
+                    "state": "CA",
+                    "zipCode": "94043",
+                    "candidates": 1
+                },
+                success: function (data, status, xhr) {
+                    var pretty = JSON.stringify(data, null, 4).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+                    $('#results').html(pretty);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
