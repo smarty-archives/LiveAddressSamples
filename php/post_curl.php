@@ -23,18 +23,18 @@ $authToken = urlencode("raw token here");
 // Simulated input received from the webpage's POST request
 $json_input = "[
     {
-        "street": "1 infinite loop",
-        "city": "cupertino",
-        "state": "ca",
-        "zipCode": "95014",
-        "candidates": "10"
+        \"street\": \"1 infinite loop\",
+        \"city\": \"cupertino\",
+        \"state\": \"ca\",
+        \"zipCode\": \"95014\",
+        \"candidates\": \"10\"
     },
     {
-        "street": "1600 Pennsylvania ave",
-        "city": "Washington",
-        "state": "DC",
-        "zipCode": "20500",
-        "candidates": "10"
+        \"street\": \"1600 Pennsylvania ave\",
+        \"city\": \"Washington\",
+        \"state\": \"DC\",
+        \"zipCode\": \"20500\",
+        \"candidates\": \"10\"
     }
 ]";
 
