@@ -25,9 +25,20 @@ The input file must be a TAB-DELIMITED text file with a header row that has
 column names from the following set (case-insensitive):
 
 [
-    'Id', 'FullName', 'FirstName', 'LastName', 'OrganizationName',
-    'Street1', 'Secondary', 'Street2', 'City', 'State', 'ZipCode',
-    'CityStateZipCode', 'Plus4Code', 'Urbanization'
+    'Id'
+    'FullName'
+    'FirstName'
+    'LastName'
+    'OrganizationName'
+    'Street1'
+    'Secondary'
+    'Street2'
+    'City'
+    'State'
+    'ZipCode'
+    'CityStateZipCode'
+    'Plus4Code'
+    'Urbanization'
 ]
 
 The column names may be presented in any order, but each record's field data
