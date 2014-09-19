@@ -24,7 +24,6 @@ address data.
 The input file must be a TAB-DELIMITED text file with a header row that has
 column names from the following set (case-insensitive):
 
-[
     'Id'
     'FullName'
     'FirstName'
@@ -39,7 +38,6 @@ column names from the following set (case-insensitive):
     'CityStateZipCode'
     'Plus4Code'
     'Urbanization'
-]
 
 The column names may be presented in any order, but each record's field data
 must match that order. Additional fields are welcome as well, but they won't be
@@ -415,8 +413,8 @@ class InputRecord(object):
 
     def decide_on_addressee(self, headers):
         """
-        This is the logic we've used at SmartyStreet for some time. But it
-        doesn't have to be like this is it's not helpful.
+        This is the logic we've used at SmartyStreets for some time. But it
+        doesn't have to be like this if it's not helpful.
         """
         organization = get(self.fields, headers.get(Headers.ORGANIZATION))
         if organization:
