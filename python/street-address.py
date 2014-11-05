@@ -12,7 +12,7 @@ QUERY_STRING = urllib.urlencode({   # entire query sting must be URL-Encoded
     "street": "1 infinite loop",
     "city": "cupertino",
     "state": "ca",
-    "zipCode": "95014",
+    "zipcode": "95014",
     "candidates": "1",
 })
 URL = LOCATION + "?" + QUERY_STRING
