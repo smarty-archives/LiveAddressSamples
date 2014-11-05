@@ -20,7 +20,7 @@ namespace SmartystreetsLiveAddressTest
 				"&street=" + Street +
 				"&city=" + City +
 				"&state=" + State +
-				"&zipCode=" + ZipCode;
+				"&zipcode=" + ZipCode;
 		}
 
 		public string Execute()

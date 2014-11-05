@@ -34,7 +34,7 @@ namespace Rest
 					  "&street=" + Street +
 					  "&city=" + City +
 					  "&state=" + State +
-					  "&zipCode=" + ZipCode;
+					  "&zipcode=" + ZipCode;
 
 			using (var client = new WebClient())
 			{

@@ -15,14 +15,14 @@ namespace SmartystreetsLiveAddressTest
                 ""street"": ""1 infinite loop"",
                 ""city"": ""cupertino"",
                 ""state"": ""ca"",
-                ""zipCode"": ""95014"",
+                ""zipcode"": ""95014"",
                 ""candidates"": ""10""
             },
             {
                 ""street"": ""1600 Pennsylvania ave"",
                 ""city"": ""Washington"",
                 ""state"": ""DC"",
-                ""zipCode"": ""20500"",
+                ""zipcode"": ""20500"",
                 ""candidates"": ""10""
             }
         ]";
