@@ -90,7 +90,7 @@ func main() {
 	}
 
 	batcher.Finish()
-	fmt.Printf("\rProcessed: %d                         \n", lines)
+	fmt.Println("Processed:", lines)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
