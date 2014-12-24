@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"runtime"
 	"strings"
@@ -28,12 +29,12 @@ import (
 
 ///////////////////////////////////////////////////////////////////////////////
 
-var ( // config
+var ( // config: TODO: would a config file be easier to use?
 	authID     string
 	authToken  string
 	inputPath  string
 	outputPath string
-	url        string
+	uri        string
 
 	maxConcurrentBatches int
 )
@@ -47,11 +48,11 @@ func init() {
 	flag.StringVar(&authToken, "auth-token", "", "The auth-token for use in HTTP requests.")
 	flag.StringVar(&inputPath, "input", "input.txt", "The path to the input text file.")
 	flag.StringVar(&outputPath, "output", "output.txt", "The path to place the output text file.")
-	flag.StringVar(&url, "url", "https://api.smartystreets.com/street-address", "The full URL to target.")
+	flag.StringVar(&uri, "url", "https://api.smartystreets.com/street-address", "The full URL to target.")
 	flag.IntVar(&maxConcurrentBatches, "batches", 10, "The maximum number of concurrent batches to submit at a time.")
 	flag.Parse()
 
-	url += fmt.Sprintf("?auth-id=%s&auth-token=%s", authID, authToken)
+	uri += fmt.Sprintf("?auth-id=%s&auth-token=%s", authID, url.QueryEscape(authToken))
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,7 +102,7 @@ func post(payload *bytes.Reader) ([]Candidate, error) {
 	)
 
 	for x := 0; x < MaxAttemptsPreRequest; x++ {
-		response, err = http.Post(url, "application/json", payload)
+		response, err = http.Post(uri, "application/json", payload)
 		if err != nil || response.StatusCode != http.StatusOK {
 			continue
 		}
