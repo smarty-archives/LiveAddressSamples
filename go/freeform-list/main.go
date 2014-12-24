@@ -34,6 +34,8 @@ var ( // config
 	inputPath  string
 	outputPath string
 	url        string
+
+	maxConcurrentBatches int
 )
 
 func init() {
@@ -46,6 +48,7 @@ func init() {
 	flag.StringVar(&inputPath, "input", "input.txt", "The path to the input text file.")
 	flag.StringVar(&outputPath, "output", "output.txt", "The path to place the output text file.")
 	flag.StringVar(&url, "url", "https://api.smartystreets.com/street-address", "The full URL to target.")
+	flag.IntVar(&maxConcurrentBatches, "batches", 10, "The maximum number of concurrent batches to submit at a time.")
 	flag.Parse()
 
 	url += fmt.Sprintf("?auth-id=%s&auth-token=%s", authID, authToken)
@@ -142,7 +145,7 @@ func NewBatcher(output *bufio.Writer) *Batcher {
 	return &Batcher{
 		waiter:  &sync.WaitGroup{},
 		output:  output,
-		batches: make([][]Input, MaxConcurrentBatches),
+		batches: make([][]Input, maxConcurrentBatches),
 	}
 }
 
@@ -160,7 +163,7 @@ func (self *Batcher) Receive(line string) {
 
 	if !added {
 		self.sendBatches()
-		self.batches = make([][]Input, MaxConcurrentBatches)
+		self.batches = make([][]Input, maxConcurrentBatches)
 		self.batches[0] = append(self.batches[0], input)
 	}
 }
@@ -170,7 +173,7 @@ func (self *Batcher) Finish() {
 }
 
 func (self *Batcher) sendBatches() {
-	all := [MaxConcurrentBatches][]Candidate{}
+	all := make([][]Candidate, maxConcurrentBatches)
 
 	for batchIndex, input := range self.batches {
 		if len(input) == 0 {
@@ -370,7 +373,6 @@ func (self *Candidate) String() string {
 
 const (
 	MaxAddressesPerBatch  = 100
-	MaxConcurrentBatches  = 10
 	MaxAttemptsPreRequest = 5
 )
 
