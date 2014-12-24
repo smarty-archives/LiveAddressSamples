@@ -1,3 +1,12 @@
+// freeform-list is a command line tool for processing lists of addresses
+// in text files. It assumes that each line in the file is an address and
+// submits the line in it's entirety to the SmartyStreets street API.
+// It requires that you provide an auth-id/auth-token key pair and an
+// active subscription. Head over to smartystreets.com to get started.
+//
+// This script is provided as-is and is not guaranteed to accomplish your
+// purposes. You may use it as-is or modify it for said purposes, but
+// that's not something we can do for you. Enjoy!
 package main
 
 ///////////////////////////////////////////////////////////////////////////////
