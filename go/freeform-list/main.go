@@ -41,9 +41,9 @@ func init() {
 
 	log.SetFlags(log.Ltime | log.Lshortfile)
 
-	flag.StringVar(&authID, "auth-id", "2320cf35-4a1b-4132-a1a4-b031b434ceb3", "The auth-id for use in HTTP requests.")
-	flag.StringVar(&authToken, "auth-token", "Av3DjGRK0WzQ3MIeZ0M2", "The auth-token for use in HTTP requests.")
-	flag.StringVar(&inputPath, "input", "/Users/mike/Desktop/wendys_freeform.csv", "The path to the input text file.")
+	flag.StringVar(&authID, "auth-id", "", "The auth-id for use in HTTP requests.")
+	flag.StringVar(&authToken, "auth-token", "", "The auth-token for use in HTTP requests.")
+	flag.StringVar(&inputPath, "input", "input.txt", "The path to the input text file.")
 	flag.StringVar(&outputPath, "output", "output.txt", "The path to place the output text file.")
 	flag.StringVar(&url, "url", "https://api.smartystreets.com/street-address", "The full URL to target.")
 	flag.Parse()
