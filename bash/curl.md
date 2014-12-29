@@ -21,3 +21,7 @@
     curl 'https://api.smartystreets.com/street-address?auth-id=<auth-id>&auth-token=<auth-token>&street=3214+n+university+ave&city=provo&state=ut&zipcode=84604&candidates=10' -H 'X-Standardize-Only: true'
 
     curl 'https://api.smartystreets.com/street-address?auth-id=<auth-id>&auth-token=<auth-token>&street=3214+n+university+ave&city=provo&state=ut&zipcode=84604&candidates=10' -H 'X-Include-Invalid: true'
+
+## Output to file
+
+    curl -o results.json "https://api.smartystreets.com/street-address?street=579+N+600+W&ssecondary=Apt+3city=Provo&state=UT&zipcode=84601&auth-id=<your-auth-id-here>&auth-token=<your-urlencoded-auth-token-here>"
