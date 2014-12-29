@@ -1,5 +1,3 @@
-curl -v 
-
 # cURL examples
 
 ## HTTP GET Method
