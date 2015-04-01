@@ -26,14 +26,14 @@ namespace RestBatch
         ""city"": ""cupertino"",
         ""state"": ""ca"",
         ""zipcode"": ""95014"",
-        ""candidates"": 10,
+        ""candidates"": 10
     },
     {
         ""street"": ""1600 Pennsylvania ave"",
         ""city"": ""Washington"",
         ""state"": ""DC"",
         ""zipcode"": ""20500"",
-        ""candidates"": 10,
+        ""candidates"": 10
     }
 ]";
 
