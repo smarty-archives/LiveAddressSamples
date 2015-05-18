@@ -1,6 +1,6 @@
 require 'cgi'
 require 'json'
-require 'net/http'
+require 'net/https'
 
 # Remember to URL encode anything that could have 
 # spaces (street, city) or special characters (auth-token).
@@ -8,27 +8,16 @@ require 'net/http'
 # Obtain an authentication ID/token pair from your
 # SmartyStreets account and put them in below.
 
-URL = 'api.smartystreets.com'
-STREET = CGI::escape('1 infinite loop')
-CITY = CGI::escape('cupertino')
-STATE = 'ca'
-ZIP_CODE = '95014'
-NUMBER_OF_CANDIDATES = '1'
-AUTH_ID = CGI::escape('YOUR_AUTHENTICATION_ID_HERE')
-AUTH_TOKEN = CGI::escape('YOUR_AUTHENTICATION_TOKEN_HERE')
-
-QUERY_STRING = '/street-address/?' +
- 	'street=' + STREET +
-	'&city=' + CITY +
-	'&state=' + STATE +
-	'&zipcode=' + ZIP_CODE +
-	'&candidates=' + NUMBER_OF_CANDIDATES +
-	'&auth-id=' + AUTH_ID +
-	'&auth-token=' + AUTH_TOKEN
-
-http = Net::HTTP.new(URL)
-request = Net::HTTP::Get.new(QUERY_STRING)
-response = http.request(request)
+uri = URI('https://api.smartystreets.com/street-address')
+args = {
+	'street' => '1 infinite loop', 
+	'city' => 'cupertino', 
+	'state' => 'ca', 
+	'auth-id' => 'YOUR_AUTH_ID_HERE', 
+	'auth-token' =>'YOUR_AUTH_TOKEN_HERE',
+}
+uri.query = URI.encode_www_form(args)
+response = Net::HTTP.get_response(uri)
 puts JSON.pretty_generate(JSON.parse(response.body))
 
 # SAMPLE OUTPUT:
