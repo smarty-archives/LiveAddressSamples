@@ -49,7 +49,7 @@ $context = stream_context_create(
 
 
 // Do the request
-$page = file_get_contents("https://api.smartystreets.com/zipcode?auth-id={$authId}&auth-token={$authToken}", false, $context);
+$page = file_get_contents("https://us-zipcode.api.smartystreets.com/lookup?auth-id={$authId}&auth-token={$authToken}", false, $context);
 
 
 // Show results

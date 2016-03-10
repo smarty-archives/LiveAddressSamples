@@ -10,7 +10,7 @@ $state = urlencode("");
 $zipcode = urlencode("90023");
 
 // Build the URL
-$req = "https://api.smartystreets.com/zipcode/?city={$city}&state={$state}&zipcode={$zipcode}&auth-id={$authId}&auth-token={$authToken}";
+$req = "https://us-zipcode.api.smartystreets.com/lookup/?city={$city}&state={$state}&zipcode={$zipcode}&auth-id={$authId}&auth-token={$authToken}";
 
 // GET request and turn into associative array
 $result = json_decode(file_get_contents($req));

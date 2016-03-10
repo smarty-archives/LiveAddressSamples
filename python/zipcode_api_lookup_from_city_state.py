@@ -14,7 +14,7 @@ import urllib2
 DELIMITER = '\t'  # or ',' for .csv
 INPUT_FILE = 'input.txt'
 OUTPUT_FILE = 'output.txt'
-URL = 'https://api.smartystreets.com/zipcode?{0}'
+URL = 'https://us-zipcode.api.smartystreets.com/lookup?{0}'
 QUERY = {
     'auth-id': '<YOUR_AUTH_ID_HERE>',
     'auth-token': '<YOUR_RAW_AUTH_TOKEN_HERE>'

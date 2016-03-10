@@ -53,7 +53,7 @@ def try_request(url, query, payload=None):
         print error.read()
 
 
-URL = 'https://api.smartystreets.com/zipcode?{0}'
+URL = 'https://us-zipcode.api.smartystreets.com/lookup?{0}'
 QUERY = {
     'auth-id': AUTH_ID,
     'auth-token': AUTH_TOKEN
