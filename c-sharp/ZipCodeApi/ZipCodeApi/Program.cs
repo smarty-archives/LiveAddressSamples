@@ -49,6 +49,7 @@
 			{
 				using (var client = new WebClient())
 				{
+					client.Headers.Add("Content-Type","application/json");
 					var url = string.Format(Url, AuthId, AuthToken);
 					Console.WriteLine("{0} (with POST payload)", url);
 					JsonHelper.PrintJson(client.UploadString(url, payload));

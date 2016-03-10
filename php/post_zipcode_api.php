@@ -40,7 +40,7 @@ $context = stream_context_create(
     array(
         "http" => array(
         "method" => "POST",
-        "header" => "Content-Type: application/x-www-form-urlencoded\r\n"
+        "header" => "Content-Type: application/json\r\n"
                     ."Content-Length: ".strlen($post)."\r\n",  
         "content" => $post
         )
