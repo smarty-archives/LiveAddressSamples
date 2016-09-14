@@ -4,8 +4,7 @@ import urllib
 
 # Obtain an authentication ID/token pair from your
 # SmartyStreets account and put them in below.
-
-LOCATION = "https://api.smartystreets.com/street-address/"
+LOCATION = "https://us-street.api.smartystreets.com/street-address/"
 QUERY_STRING = urllib.urlencode({   # entire query sting must be URL-Encoded
     "auth-id": r"<ID VALUE>",
     "auth-token": r"<RAW TOKEN VALUE>",

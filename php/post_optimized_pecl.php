@@ -1,6 +1,6 @@
 <?php
 
-// LiveAddress API sample using PHP's pecl_http libraries, by SmartyStreets.
+// US Street API API sample using PHP's pecl_http libraries.
 // Requires that the PECL extension(s) are installed.
 // This sample is optimized for performing large requests in a loop
 // very quickly.
@@ -18,7 +18,7 @@ $authId = urlencode("raw id here");
 $authToken = urlencode("raw token here");
 
 // The REST endpoint
-$url = "https://api.smartystreets.com/street-address/?auth-id={$authId}&auth-token={$authToken}";
+$url = "https://us-street.api.smartystreets.com/street-address/?auth-id={$authId}&auth-token={$authToken}";
 
 // Your input to the API...
 $addresses = array(
@@ -36,15 +36,12 @@ $addresses = array(
     )
 );
 
-// LiveAddress API expects JSON input by default, but you could send XML
-// if you set the Content-Type header to "text/xml".
+// The US Street API expects JSON input.
 $post = json_encode($addresses);
-
 
 // Prepare the POST request, and set the body of it.
 $request = new HTTPRequest($url, HTTP_METH_POST);
 $request->setBody($post);
-
 
 // Simple statistic variables
 $max = 0;
@@ -53,7 +50,6 @@ $sum = 0;
 $requests = 100;
 
 echo "<pre>";
-
 
 // Do the requests, and time it
 for ($i = 0; $i < $requests; $i ++)

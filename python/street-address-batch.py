@@ -5,8 +5,7 @@ import urllib2
 
 # Obtain an authentication ID/token pair from your
 # SmartyStreets account and put them in below.
-
-URL = "https://api.smartystreets.com/street-address/?auth-id={0}&auth-token={1}".format(
+URL = "https://us-street.api.smartystreets.com/street-address/?auth-id={0}&auth-token={1}".format(
     urllib.quote(r"<auth id here>"),
     urllib.quote(r"<raw auth token here>")
 )

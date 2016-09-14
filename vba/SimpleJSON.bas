@@ -1,5 +1,4 @@
-' LiveAddress API example with VBA using JSON!
-' by SmartyStreets. Provided as-is. Have fun!
+' US Street API API example with VBA using JSON
 '
 ' REQUIRES:
 ' -----------------------------------------------------------------------------------------
@@ -38,7 +37,7 @@ Public Sub Main()
     token = "AUTH-TOKEN"
     
     ' Create and GET the address verification request
-    request = "https://api.smartystreets.com/street-address?" & _
+    request = "https://us-street.api.smartystreets.com/street-address?" & _
                 "street=" & URLEncode(street1) & _
                 "&street2=" & URLEncode(street2) & _
                 "&city=" & URLEncode(city) & _

@@ -1,12 +1,9 @@
 <?php
 
-// LiveAddress API example (provided as-is, for instruction only)
-// by SmartyStreets: smartystreets.com
-
+// US Street API example.
 
 // POST example with PHP without using cURL.
 // Instead of cURL, we open a connection the API as a stream.
-
 
 // Your authentication ID/token (obtained in your SmartyStreets account)
 $authId = urlencode("raw id here");
@@ -27,10 +24,6 @@ $addresses = array(
         "candidates" => 3
     )
 );
-
-
-// LiveAddress API expects JSON input by default, but you could send XML
-// if you set the Content-Type header to "text/xml".
 $post = json_encode($addresses);
 
 
@@ -39,7 +32,7 @@ $context = stream_context_create(
     array(
         "http" => array(
             "method" => "POST",
-            "header" => "Content-Type: application/x-www-form-urlencoded\r\n"
+            "header" => "Content-Type: application/json\r\n"
                         ."Content-Length: ".strlen($post)."\r\n",  
             "content" => $post
         )
@@ -49,7 +42,7 @@ $context = stream_context_create(
 
 // Do the request, and we'll time it just for kicks
 $start = microtime(true);
-$page = file_get_contents("https://api.smartystreets.com/street-address/?auth-id={$authId}&auth-token={$authToken}", false, $context);
+$page = file_get_contents("https://us-street.api.smartystreets.com/street-address/?auth-id={$authId}&auth-token={$authToken}", false, $context);
 $end = microtime(true);
 
 

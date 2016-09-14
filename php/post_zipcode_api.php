@@ -1,9 +1,8 @@
 <?php
 
-// Zip Code API example (provided as-is, for instruction only)
+// US ZIP Code API example
 // by SmartyStreets: smartystreets.com
 // POST example with PHP that doesn't use cURL.
-
 
 // Your authentication ID/token (obtained in your SmartyStreets account)
 $authId = urlencode("raw id here");
@@ -30,10 +29,8 @@ $addresses = array(
     )
 );
 
-
 // This endpoint expects JSON
 $post = json_encode($addresses);
-
 
 // Create the stream context (a context is like metadata)
 $context = stream_context_create(
@@ -47,15 +44,12 @@ $context = stream_context_create(
     )
 );
 
-
 // Do the request
 $page = file_get_contents("https://us-zipcode.api.smartystreets.com/lookup?auth-id={$authId}&auth-token={$authToken}", false, $context);
-
 
 // Show results
 echo "<pre>";
 print_r(json_decode($page));
 echo "</pre>";
-
 
 ?>

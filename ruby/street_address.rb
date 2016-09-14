@@ -7,8 +7,7 @@ require 'net/https'
 
 # Obtain an authentication ID/token pair from your
 # SmartyStreets account and put them in below.
-
-uri = URI('https://api.smartystreets.com/street-address')
+uri = URI('https://us-street.api.smartystreets.com/street-address')
 args = {
 	'street' => '1 infinite loop', 
 	'city' => 'cupertino', 
